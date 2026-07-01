@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { db } from '../db/index.js'
 import { tasks, audit_events } from '../db/schema.js'
 import { eq, and, desc } from 'drizzle-orm'
-import { authMiddleware, getUserId } from '../lib/auth.js'
+import { authMiddleware, getUserId, userCanAccessWorkspace } from '../lib/auth.js'
 
 const router = new Hono()
 
@@ -31,32 +31,34 @@ const updateSchema = z.object({
   offending_substance: z.string().optional().nullable(),
 })
 
-// Public: list tasks (?workspace_id, ?status, ?product_id)
-router.get('/', async (c) => {
+// Auth: list tasks (?workspace_id required, ?status, ?product_id)
+router.get('/', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const workspaceId = c.req.query('workspace_id')
+  if (!workspaceId) return c.json({ error: 'workspace_id is required' }, 400)
+  if (!(await userCanAccessWorkspace(userId, workspaceId))) return c.json({ error: 'Forbidden' }, 403)
   const status = c.req.query('status')
   const productId = c.req.query('product_id')
 
-  const conds = []
-  if (workspaceId) conds.push(eq(tasks.workspace_id, workspaceId))
+  const conds = [eq(tasks.workspace_id, workspaceId)]
   if (status) conds.push(eq(tasks.status, status))
   if (productId) conds.push(eq(tasks.product_id, productId))
 
-  const rows = conds.length
-    ? await db
-        .select()
-        .from(tasks)
-        .where(and(...conds))
-        .orderBy(desc(tasks.created_at))
-    : await db.select().from(tasks).orderBy(desc(tasks.created_at))
+  const rows = await db
+    .select()
+    .from(tasks)
+    .where(and(...conds))
+    .orderBy(desc(tasks.created_at))
 
   return c.json(rows)
 })
 
-// Public: task detail
-router.get('/:id', async (c) => {
+// Auth: task detail
+router.get('/:id', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const [task] = await db.select().from(tasks).where(eq(tasks.id, c.req.param('id')))
   if (!task) return c.json({ error: 'Not found' }, 404)
+  if (!(await userCanAccessWorkspace(userId, task.workspace_id))) return c.json({ error: 'Forbidden' }, 403)
   return c.json(task)
 })
 

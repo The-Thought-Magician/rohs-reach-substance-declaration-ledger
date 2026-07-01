@@ -15,7 +15,7 @@ import {
   applied_exemptions,
   compliance_results,
 } from '../db/schema.js'
-import { authMiddleware, getUserId } from '../lib/auth.js'
+import { authMiddleware, getUserId, userCanAccessWorkspace } from '../lib/auth.js'
 
 const router = new Hono()
 
@@ -43,31 +43,32 @@ function statusBadge(status: string | null): { status: string; label: string; co
   }
 }
 
-// Public: list products with status badges.
-router.get('/', async (c) => {
+// Auth: list products with status badges (?workspace_id required).
+router.get('/', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const workspaceId = c.req.query('workspace_id')
+  if (!workspaceId) return c.json({ error: 'workspace_id is required' }, 400)
+  if (!(await userCanAccessWorkspace(userId, workspaceId))) return c.json({ error: 'Forbidden' }, 403)
   const status = c.req.query('status')
 
-  const conds = []
-  if (workspaceId) conds.push(eq(products.workspace_id, workspaceId))
+  const conds = [eq(products.workspace_id, workspaceId)]
   if (status) conds.push(eq(products.compliance_status, status))
 
-  const rows =
-    conds.length > 0
-      ? await db
-          .select()
-          .from(products)
-          .where(conds.length === 1 ? conds[0] : and(...conds))
-          .orderBy(desc(products.created_at))
-      : await db.select().from(products).orderBy(desc(products.created_at))
+  const rows = await db
+    .select()
+    .from(products)
+    .where(and(...conds))
+    .orderBy(desc(products.created_at))
 
   return c.json(rows.map((p) => ({ ...p, badge: statusBadge(p.compliance_status) })))
 })
 
-// Public: product detail + latest compliance result.
-router.get('/:id', async (c) => {
+// Auth: product detail + latest compliance result.
+router.get('/:id', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const [p] = await db.select().from(products).where(eq(products.id, c.req.param('id')))
   if (!p) return c.json({ error: 'Not found' }, 404)
+  if (!(await userCanAccessWorkspace(userId, p.workspace_id))) return c.json({ error: 'Forbidden' }, 403)
   const [result] = await db
     .select()
     .from(compliance_results)
@@ -115,11 +116,13 @@ router.delete('/:id', authMiddleware, async (c) => {
   return c.json({ success: true })
 })
 
-// Public: full compliance roll-up with drill-down tree.
-router.get('/:id/rollup', async (c) => {
+// Auth: full compliance roll-up with drill-down tree.
+router.get('/:id/rollup', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const id = c.req.param('id')
   const [product] = await db.select().from(products).where(eq(products.id, id))
   if (!product) return c.json({ error: 'Not found' }, 404)
+  if (!(await userCanAccessWorkspace(userId, product.workspace_id))) return c.json({ error: 'Forbidden' }, 403)
 
   // Active BOM version (fall back to most recent).
   const versions = await db

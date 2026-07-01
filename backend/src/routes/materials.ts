@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { db } from '../db/index.js'
 import { materials, material_substances, components } from '../db/schema.js'
 import { eq } from 'drizzle-orm'
-import { authMiddleware, getUserId } from '../lib/auth.js'
+import { authMiddleware, getUserId, userCanAccessWorkspace } from '../lib/auth.js'
 
 const router = new Hono()
 
@@ -27,9 +27,13 @@ async function getComponentForMaterial(materialId: string) {
 // Materials of a component
 // ---------------------------------------------------------------------------
 
-// Public: list materials of a component
-router.get('/component/:componentId', async (c) => {
+// Auth: list materials of a component
+router.get('/component/:componentId', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const componentId = c.req.param('componentId')
+  const [component] = await db.select().from(components).where(eq(components.id, componentId))
+  if (!component) return c.json({ error: 'Component not found' }, 404)
+  if (!(await userCanAccessWorkspace(userId, component.workspace_id))) return c.json({ error: 'Forbidden' }, 403)
   const rows = await db
     .select()
     .from(materials)
@@ -105,9 +109,13 @@ router.delete('/:id', authMiddleware, async (c) => {
 // Substance composition rows
 // ---------------------------------------------------------------------------
 
-// Public: substance composition of a material
-router.get('/:id/substances', async (c) => {
+// Auth: substance composition of a material
+router.get('/:id/substances', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const id = c.req.param('id')
+  const ctx = await getComponentForMaterial(id)
+  if (!ctx) return c.json({ error: 'Not found' }, 404)
+  if (!(await userCanAccessWorkspace(userId, ctx.component.workspace_id))) return c.json({ error: 'Forbidden' }, 403)
   const rows = await db
     .select()
     .from(material_substances)

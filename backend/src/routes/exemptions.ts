@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { eq, and } from 'drizzle-orm'
 import { db } from '../db/index.js'
 import { exemptions, applied_exemptions } from '../db/schema.js'
-import { authMiddleware, getUserId } from '../lib/auth.js'
+import { authMiddleware, getUserId, userCanAccessWorkspace } from '../lib/auth.js'
 
 const router = new Hono()
 
@@ -54,16 +54,17 @@ router.get('/expiring', async (c) => {
   return c.json({ exemptions: expiringList, applied })
 })
 
-// Public: applied exemptions (?workspace_id)
-router.get('/applied', async (c) => {
+// Auth: applied exemptions (?workspace_id required)
+router.get('/applied', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const workspaceId = c.req.query('workspace_id')
-  const rows = workspaceId
-    ? await db
-        .select()
-        .from(applied_exemptions)
-        .where(eq(applied_exemptions.workspace_id, workspaceId))
-        .orderBy(applied_exemptions.created_at)
-    : await db.select().from(applied_exemptions).orderBy(applied_exemptions.created_at)
+  if (!workspaceId) return c.json({ error: 'workspace_id is required' }, 400)
+  if (!(await userCanAccessWorkspace(userId, workspaceId))) return c.json({ error: 'Forbidden' }, 403)
+  const rows = await db
+    .select()
+    .from(applied_exemptions)
+    .where(eq(applied_exemptions.workspace_id, workspaceId))
+    .orderBy(applied_exemptions.created_at)
   return c.json(rows)
 })
 

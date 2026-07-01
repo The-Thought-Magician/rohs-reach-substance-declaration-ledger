@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { eq, and, desc } from 'drizzle-orm'
 import { db } from '../db/index.js'
 import { declaration_requests, suppliers } from '../db/schema.js'
-import { authMiddleware, getUserId } from '../lib/auth.js'
+import { authMiddleware, getUserId, userCanAccessWorkspace, RECEIVED_REQUEST_STATUSES } from '../lib/auth.js'
 
 const router = new Hono()
 
@@ -39,44 +39,44 @@ function toDate(v: string | null | undefined): Date | null {
   return Number.isNaN(t) ? null : new Date(t)
 }
 
-// Statuses that count as "returned/received".
-const RECEIVED_STATUSES = new Set(['received', 'completed', 'fulfilled', 'closed'])
+// Statuses that count as "returned/received" (canonical set shared with
+// suppliers.ts and reports.ts via lib/auth.js).
+const RECEIVED_STATUSES = RECEIVED_REQUEST_STATUSES
 
-// GET / — public — request ledger (?workspace_id, ?status, ?supplier_id)
-router.get('/', async (c) => {
+// GET / — auth — request ledger (?workspace_id required, ?status, ?supplier_id)
+router.get('/', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const workspaceId = c.req.query('workspace_id')
+  if (!workspaceId) return c.json({ error: 'workspace_id is required' }, 400)
+  if (!(await userCanAccessWorkspace(userId, workspaceId))) return c.json({ error: 'Forbidden' }, 403)
   const status = c.req.query('status')
   const supplierId = c.req.query('supplier_id')
 
-  const conds = []
-  if (workspaceId) conds.push(eq(declaration_requests.workspace_id, workspaceId))
+  const conds = [eq(declaration_requests.workspace_id, workspaceId)]
   if (status) conds.push(eq(declaration_requests.status, status))
   if (supplierId) conds.push(eq(declaration_requests.supplier_id, supplierId))
 
-  const rows = conds.length
-    ? await db
-        .select()
-        .from(declaration_requests)
-        .where(and(...conds))
-        .orderBy(desc(declaration_requests.created_at))
-    : await db.select().from(declaration_requests).orderBy(desc(declaration_requests.created_at))
+  const rows = await db
+    .select()
+    .from(declaration_requests)
+    .where(and(...conds))
+    .orderBy(desc(declaration_requests.created_at))
   return c.json(rows)
 })
 
-// GET /ledger — public — who-has-and-hasn't-returned summary grouped by supplier
-router.get('/ledger', async (c) => {
+// GET /ledger — auth — who-has-and-hasn't-returned summary grouped by supplier
+router.get('/ledger', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const workspaceId = c.req.query('workspace_id')
+  if (!workspaceId) return c.json({ error: 'workspace_id is required' }, 400)
+  if (!(await userCanAccessWorkspace(userId, workspaceId))) return c.json({ error: 'Forbidden' }, 403)
 
-  const rows = workspaceId
-    ? await db
-        .select()
-        .from(declaration_requests)
-        .where(eq(declaration_requests.workspace_id, workspaceId))
-    : await db.select().from(declaration_requests)
+  const rows = await db
+    .select()
+    .from(declaration_requests)
+    .where(eq(declaration_requests.workspace_id, workspaceId))
 
-  const supplierRows = workspaceId
-    ? await db.select().from(suppliers).where(eq(suppliers.workspace_id, workspaceId))
-    : await db.select().from(suppliers)
+  const supplierRows = await db.select().from(suppliers).where(eq(suppliers.workspace_id, workspaceId))
   const supplierById = new Map(supplierRows.map((s) => [s.id, s]))
 
   type Agg = { supplier: unknown; requested: number; received: number; outstanding: number }

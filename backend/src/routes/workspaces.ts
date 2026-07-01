@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { eq, and, or, inArray, desc } from 'drizzle-orm'
 import { db } from '../db/index.js'
 import { workspaces, workspace_members } from '../db/schema.js'
-import { authMiddleware, getUserId } from '../lib/auth.js'
+import { authMiddleware, getUserId, userCanAccessWorkspace } from '../lib/auth.js'
 
 const router = new Hono()
 
@@ -47,16 +47,21 @@ router.get('/', async (c) => {
   return c.json(all)
 })
 
-// Public: workspace detail.
-router.get('/:id', async (c) => {
-  const [ws] = await db.select().from(workspaces).where(eq(workspaces.id, c.req.param('id')))
+// Auth: workspace detail (member/owner only).
+router.get('/:id', authMiddleware, async (c) => {
+  const userId = getUserId(c)
+  const id = c.req.param('id')
+  const [ws] = await db.select().from(workspaces).where(eq(workspaces.id, id))
   if (!ws) return c.json({ error: 'Not found' }, 404)
+  if (!(await userCanAccessWorkspace(userId, id))) return c.json({ error: 'Forbidden' }, 403)
   return c.json(ws)
 })
 
-// Public: list members.
-router.get('/:id/members', async (c) => {
+// Auth: list members (member/owner only).
+router.get('/:id/members', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const id = c.req.param('id')
+  if (!(await userCanAccessWorkspace(userId, id))) return c.json({ error: 'Forbidden' }, 403)
   const members = await db
     .select()
     .from(workspace_members)

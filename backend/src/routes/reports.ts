@@ -16,7 +16,7 @@ import {
   declaration_requests,
 } from '../db/schema.js'
 import { eq, and, desc } from 'drizzle-orm'
-import { authMiddleware, getUserId } from '../lib/auth.js'
+import { authMiddleware, getUserId, userCanAccessWorkspace, RECEIVED_REQUEST_STATUSES } from '../lib/auth.js'
 
 const router = new Hono()
 
@@ -32,23 +32,26 @@ const TYPE_TITLES: Record<string, string> = {
   'supplier-coverage': 'Supplier Coverage Report',
 }
 
-// GET / — report history (?workspace_id)
-router.get('/', async (c) => {
+// GET / — auth — report history (?workspace_id required)
+router.get('/', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const workspaceId = c.req.query('workspace_id')
-  const rows = workspaceId
-    ? await db
-        .select()
-        .from(reports)
-        .where(eq(reports.workspace_id, workspaceId))
-        .orderBy(desc(reports.created_at))
-    : await db.select().from(reports).orderBy(desc(reports.created_at))
+  if (!workspaceId) return c.json({ error: 'workspace_id is required' }, 400)
+  if (!(await userCanAccessWorkspace(userId, workspaceId))) return c.json({ error: 'Forbidden' }, 403)
+  const rows = await db
+    .select()
+    .from(reports)
+    .where(eq(reports.workspace_id, workspaceId))
+    .orderBy(desc(reports.created_at))
   return c.json(rows)
 })
 
-// GET /:id — report detail
-router.get('/:id', async (c) => {
+// GET /:id — auth — report detail
+router.get('/:id', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const [r] = await db.select().from(reports).where(eq(reports.id, c.req.param('id')))
   if (!r) return c.json({ error: 'Not found' }, 404)
+  if (!(await userCanAccessWorkspace(userId, r.workspace_id))) return c.json({ error: 'Forbidden' }, 403)
   return c.json(r)
 })
 
@@ -216,7 +219,7 @@ async function buildSupplierCoverage(workspaceId: string) {
     if (!r.supplier_id) continue
     const entry = reqBySupplier.get(r.supplier_id) ?? { requested: 0, received: 0 }
     entry.requested += 1
-    if (r.status === 'received' || r.status === 'closed') entry.received += 1
+    if (RECEIVED_REQUEST_STATUSES.has(r.status)) entry.received += 1
     reqBySupplier.set(r.supplier_id, entry)
   }
 

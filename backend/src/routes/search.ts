@@ -12,14 +12,18 @@ import {
   bom_versions,
 } from '../db/schema.js'
 import { eq, and, or, ilike } from 'drizzle-orm'
+import { authMiddleware, getUserId, userCanAccessWorkspace } from '../lib/auth.js'
 
 const router = new Hono()
 
-// Public: global search across products, components, suppliers, substances.
-// GET /?q=&workspace_id=
-router.get('/', async (c) => {
+// Auth: global search across products, components, suppliers, substances.
+// GET /?q=&workspace_id= (workspace_id required)
+router.get('/', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const q = (c.req.query('q') ?? '').trim()
   const workspaceId = c.req.query('workspace_id')
+  if (!workspaceId) return c.json({ error: 'workspace_id is required' }, 400)
+  if (!(await userCanAccessWorkspace(userId, workspaceId))) return c.json({ error: 'Forbidden' }, 403)
 
   if (!q) {
     return c.json({ products: [], components: [], suppliers: [], substances: [] })
@@ -36,7 +40,7 @@ router.get('/', async (c) => {
   const productRows = await db
     .select()
     .from(products)
-    .where(workspaceId ? and(eq(products.workspace_id, workspaceId), productMatch) : productMatch)
+    .where(and(eq(products.workspace_id, workspaceId), productMatch))
     .limit(25)
 
   // Components: match on name / manufacturer_part_number / manufacturer / description.
@@ -49,9 +53,7 @@ router.get('/', async (c) => {
   const componentRows = await db
     .select()
     .from(components)
-    .where(
-      workspaceId ? and(eq(components.workspace_id, workspaceId), componentMatch) : componentMatch,
-    )
+    .where(and(eq(components.workspace_id, workspaceId), componentMatch))
     .limit(25)
 
   // Suppliers: match on name / region.
@@ -59,9 +61,7 @@ router.get('/', async (c) => {
   const supplierRows = await db
     .select()
     .from(suppliers)
-    .where(
-      workspaceId ? and(eq(suppliers.workspace_id, workspaceId), supplierMatch) : supplierMatch,
-    )
+    .where(and(eq(suppliers.workspace_id, workspaceId), supplierMatch))
     .limit(25)
 
   // Substances: union of restricted (RoHS), SVHC (REACH), and observed material substances.
@@ -83,10 +83,15 @@ router.get('/', async (c) => {
       cas_number: material_substances.cas_number,
     })
     .from(material_substances)
+    .innerJoin(materials, eq(material_substances.material_id, materials.id))
+    .innerJoin(components, eq(materials.component_id, components.id))
     .where(
-      or(
-        ilike(material_substances.substance_name, like),
-        ilike(material_substances.cas_number, like),
+      and(
+        eq(components.workspace_id, workspaceId),
+        or(
+          ilike(material_substances.substance_name, like),
+          ilike(material_substances.cas_number, like),
+        ),
       ),
     )
     .limit(25)
@@ -120,17 +125,19 @@ router.get('/', async (c) => {
   })
 })
 
-// Public: reverse lookup — every product/part containing a CAS number.
-// GET /substance?cas=&workspace_id=
-router.get('/substance', async (c) => {
+// Auth: reverse lookup — every product/part containing a CAS number.
+// GET /substance?cas=&workspace_id= (workspace_id required)
+router.get('/substance', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const cas = (c.req.query('cas') ?? '').trim()
   const workspaceId = c.req.query('workspace_id')
+  if (!workspaceId) return c.json({ error: 'workspace_id is required' }, 400)
+  if (!(await userCanAccessWorkspace(userId, workspaceId))) return c.json({ error: 'Forbidden' }, 403)
 
   if (!cas) return c.json({ cas, hits: [] })
 
   // material_substances -> materials -> components -> bom_items -> bom_versions -> products
-  const conds = [eq(material_substances.cas_number, cas)]
-  if (workspaceId) conds.push(eq(components.workspace_id, workspaceId))
+  const conds = [eq(material_substances.cas_number, cas), eq(components.workspace_id, workspaceId)]
 
   const rows = await db
     .select({

@@ -1,14 +1,18 @@
 import { Hono } from 'hono'
 import { db } from '../db/index.js'
-import { audit_events, compliance_results } from '../db/schema.js'
+import { audit_events, compliance_results, products } from '../db/schema.js'
 import { eq, and, desc, inArray } from 'drizzle-orm'
+import { authMiddleware, getUserId, userCanAccessWorkspace } from '../lib/auth.js'
 
 const router = new Hono()
 
-// Public: paginated audit/evidence log
-// (?workspace_id, ?entity_type, ?entity_id, ?limit, ?offset)
-router.get('/', async (c) => {
+// Auth: paginated audit/evidence log, scoped to a workspace the caller can access.
+// (?workspace_id [required], ?entity_type, ?entity_id, ?limit, ?offset)
+router.get('/', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const workspaceId = c.req.query('workspace_id')
+  if (!workspaceId) return c.json({ error: 'workspace_id is required' }, 400)
+  if (!(await userCanAccessWorkspace(userId, workspaceId))) return c.json({ error: 'Forbidden' }, 403)
   const entityType = c.req.query('entity_type')
   const entityId = c.req.query('entity_id')
 
@@ -34,11 +38,16 @@ router.get('/', async (c) => {
   return c.json(rows)
 })
 
-// Public: evidence trail for a product.
+// Auth: evidence trail for a product.
 // Pulls audit rows directly anchored to the product, plus rows for that product's
 // compliance results (offending parts/substances), forming an immutable trail.
-router.get('/product/:productId', async (c) => {
+router.get('/product/:productId', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const productId = c.req.param('productId')
+
+  const [product] = await db.select().from(products).where(eq(products.id, productId))
+  if (!product) return c.json({ error: 'Not found' }, 404)
+  if (!(await userCanAccessWorkspace(userId, product.workspace_id))) return c.json({ error: 'Forbidden' }, 403)
 
   // Compliance result ids for this product (evidence entities).
   const results = await db

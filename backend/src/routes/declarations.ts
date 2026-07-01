@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { eq, and, desc } from 'drizzle-orm'
 import { db } from '../db/index.js'
 import { declarations, declaration_substances } from '../db/schema.js'
-import { authMiddleware, getUserId } from '../lib/auth.js'
+import { authMiddleware, getUserId, userCanAccessWorkspace } from '../lib/auth.js'
 
 const router = new Hono()
 
@@ -47,36 +47,37 @@ function toDate(v: string | null | undefined): Date | null | undefined {
   return Number.isNaN(t) ? null : new Date(t)
 }
 
-// GET / — public — declarations (?workspace_id, ?component_id, ?supplier_id, ?status)
-router.get('/', async (c) => {
+// GET / — auth — declarations (?workspace_id required, ?component_id, ?supplier_id, ?status)
+router.get('/', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const workspaceId = c.req.query('workspace_id')
+  if (!workspaceId) return c.json({ error: 'workspace_id is required' }, 400)
+  if (!(await userCanAccessWorkspace(userId, workspaceId))) return c.json({ error: 'Forbidden' }, 403)
   const componentId = c.req.query('component_id')
   const supplierId = c.req.query('supplier_id')
   const status = c.req.query('status')
 
-  const conds = []
-  if (workspaceId) conds.push(eq(declarations.workspace_id, workspaceId))
+  const conds = [eq(declarations.workspace_id, workspaceId)]
   if (componentId) conds.push(eq(declarations.component_id, componentId))
   if (supplierId) conds.push(eq(declarations.supplier_id, supplierId))
   if (status) conds.push(eq(declarations.status, status))
 
-  const rows = conds.length
-    ? await db.select().from(declarations).where(and(...conds)).orderBy(desc(declarations.created_at))
-    : await db.select().from(declarations).orderBy(desc(declarations.created_at))
+  const rows = await db.select().from(declarations).where(and(...conds)).orderBy(desc(declarations.created_at))
   return c.json(rows)
 })
 
-// GET /stale?days=365 — public — declarations stale/expiring
-router.get('/stale', async (c) => {
+// GET /stale?days=365 — auth — declarations stale/expiring (?workspace_id required)
+router.get('/stale', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const days = parseInt(c.req.query('days') ?? '365', 10)
   const workspaceId = c.req.query('workspace_id')
+  if (!workspaceId) return c.json({ error: 'workspace_id is required' }, 400)
+  if (!(await userCanAccessWorkspace(userId, workspaceId))) return c.json({ error: 'Forbidden' }, 403)
   const now = Date.now()
   const windowMs = (Number.isFinite(days) ? days : 365) * 86_400_000
   const threshold = now + windowMs
 
-  const rows = workspaceId
-    ? await db.select().from(declarations).where(eq(declarations.workspace_id, workspaceId))
-    : await db.select().from(declarations)
+  const rows = await db.select().from(declarations).where(eq(declarations.workspace_id, workspaceId))
 
   const stale = rows.filter((d) => {
     // Expiring: valid_until within the window (or already past).
@@ -95,11 +96,13 @@ router.get('/stale', async (c) => {
   return c.json(stale)
 })
 
-// GET /:id — public — declaration + captured substances
-router.get('/:id', async (c) => {
+// GET /:id — auth — declaration + captured substances
+router.get('/:id', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const id = c.req.param('id')
   const [declaration] = await db.select().from(declarations).where(eq(declarations.id, id))
   if (!declaration) return c.json({ error: 'Not found' }, 404)
+  if (!(await userCanAccessWorkspace(userId, declaration.workspace_id))) return c.json({ error: 'Forbidden' }, 403)
   const substances = await db
     .select()
     .from(declaration_substances)

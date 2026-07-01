@@ -21,7 +21,7 @@ import {
   declaration_requests,
 } from '../db/schema.js'
 import { eq, and } from 'drizzle-orm'
-import { authMiddleware, getUserId } from '../lib/auth.js'
+import { authMiddleware, getUserId, userCanAccessWorkspace } from '../lib/auth.js'
 
 const router = new Hono()
 
@@ -30,11 +30,13 @@ const SEED_WORKSPACE_NAME = 'Sample Compliance Workspace'
 // ---------------------------------------------------------------------------
 // GET /status?workspace_id= — whether the sample data is present
 // ---------------------------------------------------------------------------
-router.get('/status', async (c) => {
+router.get('/status', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const workspaceId = c.req.query('workspace_id')
   if (!workspaceId) {
     return c.json({ seeded: false, counts: {} })
   }
+  if (!(await userCanAccessWorkspace(userId, workspaceId))) return c.json({ error: 'Forbidden' }, 403)
   const [ws] = await db.select().from(workspaces).where(eq(workspaces.id, workspaceId))
   if (!ws) return c.json({ seeded: false, counts: {} })
 

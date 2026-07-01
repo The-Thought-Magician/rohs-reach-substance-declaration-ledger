@@ -53,10 +53,12 @@ interface Overview {
   counts?: Counts
   coverageTrend?: TrendPoint[]
   coverage_trend?: TrendPoint[]
-  svhcExposure?: SvhcExposurePoint[]
-  svhc_exposure?: SvhcExposurePoint[]
-  exemptionRunway?: ExemptionRunwayPoint[]
-  exemption_runway?: ExemptionRunwayPoint[]
+  // Backend returns these as objects: { affectedSubstances, items } and
+  // { buckets, items } respectively — NOT bare arrays. See dashboard.ts.
+  svhcExposure?: { affectedSubstances?: number; items?: SvhcExposurePoint[] }
+  svhc_exposure?: { affectedSubstances?: number; items?: SvhcExposurePoint[] }
+  exemptionRunway?: { buckets?: Record<string, number>; items?: ExemptionRunwayPoint[] }
+  exemption_runway?: { buckets?: Record<string, number>; items?: ExemptionRunwayPoint[] }
   supplierResponsiveness?: SupplierResponsiveness[]
   supplier_responsiveness?: SupplierResponsiveness[]
 }
@@ -115,8 +117,8 @@ export default function DashboardOverviewPage() {
   const trend = useMemo(() => (overview ? normTrend(overview) : []), [overview])
   const latestCoverage = trend.length ? trend[trend.length - 1].pct : 0
 
-  const svhc = overview?.svhcExposure ?? overview?.svhc_exposure ?? []
-  const runway = overview?.exemptionRunway ?? overview?.exemption_runway ?? []
+  const svhc = (overview?.svhcExposure ?? overview?.svhc_exposure)?.items ?? []
+  const runway = (overview?.exemptionRunway ?? overview?.exemption_runway)?.items ?? []
   const suppliers = overview?.supplierResponsiveness ?? overview?.supplier_responsiveness ?? []
 
   const recentProducts = useMemo(

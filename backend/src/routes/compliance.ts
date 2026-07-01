@@ -19,7 +19,7 @@ import {
   notifications,
   workspaces,
 } from '../db/schema.js'
-import { authMiddleware, getUserId } from '../lib/auth.js'
+import { authMiddleware, getUserId, userCanAccessWorkspace } from '../lib/auth.js'
 
 const router = new Hono()
 
@@ -327,9 +327,13 @@ async function persistResult(
   return result
 }
 
-// GET /product/:productId — public — latest computed result
-router.get('/product/:productId', async (c) => {
+// GET /product/:productId — auth — latest computed result
+router.get('/product/:productId', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const productId = c.req.param('productId')
+  const [product] = await db.select().from(products).where(eq(products.id, productId))
+  if (!product) return c.json({ error: 'Not found' }, 404)
+  if (!(await userCanAccessWorkspace(userId, product.workspace_id))) return c.json({ error: 'Forbidden' }, 403)
   const [result] = await db
     .select()
     .from(compliance_results)
@@ -340,16 +344,17 @@ router.get('/product/:productId', async (c) => {
   return c.json(result)
 })
 
-// GET /results — public — all results (?workspace_id)
-router.get('/results', async (c) => {
+// GET /results — auth — all results for a workspace the caller can access (?workspace_id required)
+router.get('/results', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const workspaceId = c.req.query('workspace_id')
-  const rows = workspaceId
-    ? await db
-        .select()
-        .from(compliance_results)
-        .where(eq(compliance_results.workspace_id, workspaceId))
-        .orderBy(desc(compliance_results.computed_at))
-    : await db.select().from(compliance_results).orderBy(desc(compliance_results.computed_at))
+  if (!workspaceId) return c.json({ error: 'workspace_id is required' }, 400)
+  if (!(await userCanAccessWorkspace(userId, workspaceId))) return c.json({ error: 'Forbidden' }, 403)
+  const rows = await db
+    .select()
+    .from(compliance_results)
+    .where(eq(compliance_results.workspace_id, workspaceId))
+    .orderBy(desc(compliance_results.computed_at))
   return c.json(rows)
 })
 

@@ -11,6 +11,7 @@ import {
   applied_exemptions,
 } from '../db/schema.js'
 import { eq, inArray } from 'drizzle-orm'
+import { authMiddleware, getUserId, userCanAccessWorkspace } from '../lib/auth.js'
 
 const router = new Hono()
 
@@ -133,10 +134,12 @@ async function computeArticlesForProduct(
 }
 
 // GET /product/:productId — SCIP-readiness: articles requiring notification.
-router.get('/product/:productId', async (c) => {
+router.get('/product/:productId', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const productId = c.req.param('productId')
   const [product] = await db.select().from(products).where(eq(products.id, productId))
   if (!product) return c.json({ error: 'Not found' }, 404)
+  if (!(await userCanAccessWorkspace(userId, product.workspace_id))) return c.json({ error: 'Forbidden' }, 403)
 
   const articles = await computeArticlesForProduct(product)
   return c.json({
@@ -153,12 +156,13 @@ router.get('/product/:productId', async (c) => {
   })
 })
 
-// GET / — workspace SCIP summary (?workspace_id).
-router.get('/', async (c) => {
+// GET / — workspace SCIP summary (?workspace_id required).
+router.get('/', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const workspaceId = c.req.query('workspace_id')
-  const all = workspaceId
-    ? await db.select().from(products).where(eq(products.workspace_id, workspaceId))
-    : await db.select().from(products)
+  if (!workspaceId) return c.json({ error: 'workspace_id is required' }, 400)
+  if (!(await userCanAccessWorkspace(userId, workspaceId))) return c.json({ error: 'Forbidden' }, 403)
+  const all = await db.select().from(products).where(eq(products.workspace_id, workspaceId))
 
   const summary = []
   for (const product of all) {

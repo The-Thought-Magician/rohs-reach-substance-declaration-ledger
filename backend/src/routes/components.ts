@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { db } from '../db/index.js'
 import { components, materials, material_substances } from '../db/schema.js'
 import { eq, and, desc, inArray } from 'drizzle-orm'
-import { authMiddleware, getUserId } from '../lib/auth.js'
+import { authMiddleware, getUserId, userCanAccessWorkspace } from '../lib/auth.js'
 
 const router = new Hono()
 
@@ -12,25 +12,24 @@ const router = new Hono()
 // Catalog list with substance / supplier filters
 // ---------------------------------------------------------------------------
 
-// Public: list components for a workspace, with optional supplier and
-// substance-CAS filters. ?workspace_id, ?supplier_id, ?substance_cas
-router.get('/', async (c) => {
+// Auth: list components for a workspace, with optional supplier and
+// substance-CAS filters. ?workspace_id (required), ?supplier_id, ?substance_cas
+router.get('/', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const workspaceId = c.req.query('workspace_id')
+  if (!workspaceId) return c.json({ error: 'workspace_id is required' }, 400)
+  if (!(await userCanAccessWorkspace(userId, workspaceId))) return c.json({ error: 'Forbidden' }, 403)
   const supplierId = c.req.query('supplier_id')
   const substanceCas = c.req.query('substance_cas')
 
-  const conditions = []
-  if (workspaceId) conditions.push(eq(components.workspace_id, workspaceId))
+  const conditions = [eq(components.workspace_id, workspaceId)]
   if (supplierId) conditions.push(eq(components.supplier_id, supplierId))
 
-  const rows =
-    conditions.length > 0
-      ? await db
-          .select()
-          .from(components)
-          .where(and(...conditions))
-          .orderBy(desc(components.created_at))
-      : await db.select().from(components).orderBy(desc(components.created_at))
+  const rows = await db
+    .select()
+    .from(components)
+    .where(and(...conditions))
+    .orderBy(desc(components.created_at))
 
   if (!substanceCas) return c.json(rows)
 
@@ -59,11 +58,13 @@ router.get('/', async (c) => {
   return c.json(rows.filter((r) => matchingComponentIds.has(r.id)))
 })
 
-// Public: component detail + its materials
-router.get('/:id', async (c) => {
+// Auth: component detail + its materials
+router.get('/:id', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const id = c.req.param('id')
   const [component] = await db.select().from(components).where(eq(components.id, id))
   if (!component) return c.json({ error: 'Not found' }, 404)
+  if (!(await userCanAccessWorkspace(userId, component.workspace_id))) return c.json({ error: 'Forbidden' }, 403)
   const mats = await db
     .select()
     .from(materials)

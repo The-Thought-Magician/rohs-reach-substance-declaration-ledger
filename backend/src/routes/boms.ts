@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { db } from '../db/index.js'
 import { bom_versions, bom_items, products, components } from '../db/schema.js'
 import { eq, and, desc } from 'drizzle-orm'
-import { authMiddleware, getUserId } from '../lib/auth.js'
+import { authMiddleware, getUserId, userCanAccessWorkspace } from '../lib/auth.js'
 
 const router = new Hono()
 
@@ -37,9 +37,13 @@ async function getItemContext(itemId: string) {
 // BOM versions
 // ---------------------------------------------------------------------------
 
-// Public: list BOM versions for a product (newest first)
-router.get('/product/:productId/versions', async (c) => {
+// Auth: list BOM versions for a product (newest first)
+router.get('/product/:productId/versions', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const productId = c.req.param('productId')
+  const product = await getProductOwned(productId)
+  if (!product) return c.json({ error: 'Product not found' }, 404)
+  if (!(await userCanAccessWorkspace(userId, product.workspace_id))) return c.json({ error: 'Forbidden' }, 403)
   const rows = await db
     .select()
     .from(bom_versions)
@@ -182,9 +186,13 @@ router.post(
 // BOM items (tree)
 // ---------------------------------------------------------------------------
 
-// Public: list items for a version (tree, ordered)
-router.get('/versions/:versionId/items', async (c) => {
+// Auth: list items for a version (tree, ordered)
+router.get('/versions/:versionId/items', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const versionId = c.req.param('versionId')
+  const ctx = await getVersionWithProduct(versionId)
+  if (!ctx) return c.json({ error: 'Version not found' }, 404)
+  if (!(await userCanAccessWorkspace(userId, ctx.product.workspace_id))) return c.json({ error: 'Forbidden' }, 403)
   const rows = await db
     .select()
     .from(bom_items)

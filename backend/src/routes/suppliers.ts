@@ -13,7 +13,7 @@ import {
   restricted_substances,
   svhc_substances,
 } from '../db/schema.js'
-import { authMiddleware, getUserId } from '../lib/auth.js'
+import { authMiddleware, getUserId, RECEIVED_REQUEST_STATUSES, userCanAccessWorkspace } from '../lib/auth.js'
 
 const router = new Hono()
 
@@ -33,31 +33,36 @@ const contactSchema = z.object({
   is_escalation: z.boolean().optional().default(false),
 })
 
-// Public: list suppliers, optionally scoped to a workspace.
-router.get('/', async (c) => {
+// Auth: list suppliers, scoped to a workspace the caller can access.
+router.get('/', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const workspaceId = c.req.query('workspace_id')
-  const rows = workspaceId
-    ? await db
-        .select()
-        .from(suppliers)
-        .where(eq(suppliers.workspace_id, workspaceId))
-        .orderBy(desc(suppliers.created_at))
-    : await db.select().from(suppliers).orderBy(desc(suppliers.created_at))
+  if (!workspaceId) return c.json({ error: 'workspace_id is required' }, 400)
+  if (!(await userCanAccessWorkspace(userId, workspaceId))) return c.json({ error: 'Forbidden' }, 403)
+  const rows = await db
+    .select()
+    .from(suppliers)
+    .where(eq(suppliers.workspace_id, workspaceId))
+    .orderBy(desc(suppliers.created_at))
   return c.json(rows)
 })
 
-// Public: supplier detail.
-router.get('/:id', async (c) => {
+// Auth: supplier detail.
+router.get('/:id', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const [s] = await db.select().from(suppliers).where(eq(suppliers.id, c.req.param('id')))
   if (!s) return c.json({ error: 'Not found' }, 404)
+  if (!(await userCanAccessWorkspace(userId, s.workspace_id))) return c.json({ error: 'Forbidden' }, 403)
   return c.json(s)
 })
 
-// Public: scorecard — responsiveness, declaration freshness, coverage, pass rate.
-router.get('/:id/scorecard', async (c) => {
+// Auth: scorecard — responsiveness, declaration freshness, coverage, pass rate.
+router.get('/:id/scorecard', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const id = c.req.param('id')
   const [supplier] = await db.select().from(suppliers).where(eq(suppliers.id, id))
   if (!supplier) return c.json({ error: 'Not found' }, 404)
+  if (!(await userCanAccessWorkspace(userId, supplier.workspace_id))) return c.json({ error: 'Forbidden' }, 403)
 
   // Parts supplied by this supplier.
   const parts = await db.select().from(components).where(eq(components.supplier_id, id))
@@ -131,7 +136,7 @@ router.get('/:id/scorecard', async (c) => {
     .select()
     .from(declaration_requests)
     .where(eq(declaration_requests.supplier_id, id))
-  const received = reqs.filter((r) => r.status === 'received' || r.status === 'fulfilled').length
+  const received = reqs.filter((r) => RECEIVED_REQUEST_STATUSES.has(r.status)).length
   const responsivenessPct =
     reqs.length > 0 ? Math.round((received / reqs.length) * 10000) / 100 : 0
   const avgReminders =
@@ -155,9 +160,13 @@ router.get('/:id/scorecard', async (c) => {
   })
 })
 
-// Public: list contacts.
-router.get('/:id/contacts', async (c) => {
+// Auth: list contacts.
+router.get('/:id/contacts', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const id = c.req.param('id')
+  const [supplier] = await db.select().from(suppliers).where(eq(suppliers.id, id))
+  if (!supplier) return c.json({ error: 'Not found' }, 404)
+  if (!(await userCanAccessWorkspace(userId, supplier.workspace_id))) return c.json({ error: 'Forbidden' }, 403)
   const rows = await db
     .select()
     .from(supplier_contacts)

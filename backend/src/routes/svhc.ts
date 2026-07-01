@@ -13,7 +13,7 @@ import {
   bom_versions,
   products,
 } from '../db/schema.js'
-import { authMiddleware, getUserId } from '../lib/auth.js'
+import { authMiddleware, getUserId, userCanAccessWorkspace } from '../lib/auth.js'
 
 const router = new Hono()
 
@@ -146,9 +146,12 @@ router.get('/diff', async (c) => {
   return c.json({ added })
 })
 
-// Public: watch — products newly affected by SVHC substances in the latest version
-router.get('/watch', async (c) => {
+// Auth: watch — products newly affected by SVHC substances in the latest version
+router.get('/watch', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const workspaceId = c.req.query('workspace_id')
+  if (!workspaceId) return c.json({ error: 'workspace_id is required' }, 400)
+  if (!(await userCanAccessWorkspace(userId, workspaceId))) return c.json({ error: 'Forbidden' }, 403)
 
   // Resolve the latest SVHC version.
   const [latest] = await db

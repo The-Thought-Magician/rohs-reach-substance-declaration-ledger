@@ -16,7 +16,7 @@ import {
   audit_events,
 } from '../db/schema.js'
 import { eq, and, inArray, desc } from 'drizzle-orm'
-import { authMiddleware, getUserId } from '../lib/auth.js'
+import { authMiddleware, getUserId, userCanAccessWorkspace } from '../lib/auth.js'
 
 const router = new Hono()
 
@@ -172,10 +172,12 @@ async function assemblePack(product: typeof products.$inferSelect) {
 }
 
 // GET /product/:productId — assembled declaration pack.
-router.get('/product/:productId', async (c) => {
+router.get('/product/:productId', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const productId = c.req.param('productId')
   const [product] = await db.select().from(products).where(eq(products.id, productId))
   if (!product) return c.json({ error: 'Not found' }, 404)
+  if (!(await userCanAccessWorkspace(userId, product.workspace_id))) return c.json({ error: 'Forbidden' }, 403)
   const pack = await assemblePack(product)
   return c.json(pack)
 })

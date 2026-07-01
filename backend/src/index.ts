@@ -322,6 +322,13 @@ async function seedIfEmpty(): Promise<void> {
 // each in its own try/catch). NEVER await DB work before serve().
 // ---------------------------------------------------------------------------
 
+process.on('unhandledRejection', (reason) => {
+  console.error('Unhandled promise rejection:', reason)
+})
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught exception:', err)
+})
+
 const port = parseInt(process.env.PORT ?? '3001')
 
 serve({ fetch: app.fetch, port }, () => console.log(`Server running on port ${port}`))

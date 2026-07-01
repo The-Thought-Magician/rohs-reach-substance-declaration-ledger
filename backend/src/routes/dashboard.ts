@@ -13,14 +13,17 @@ import {
   suppliers,
 } from '../db/schema.js'
 import { eq, and, desc } from 'drizzle-orm'
+import { authMiddleware, getUserId, userCanAccessWorkspace } from '../lib/auth.js'
 
 const router = new Hono()
 
 // GET /overview?workspace_id= — portfolio analytics overview
 // Returns: { counts, coverageTrend, svhcExposure, exemptionRunway, supplierResponsiveness }
-router.get('/overview', async (c) => {
+router.get('/overview', authMiddleware, async (c) => {
+  const userId = getUserId(c)
   const workspaceId = c.req.query('workspace_id')
   if (!workspaceId) return c.json({ error: 'workspace_id is required' }, 400)
+  if (!(await userCanAccessWorkspace(userId, workspaceId))) return c.json({ error: 'Forbidden' }, 403)
 
   // ---- Status counts across the product portfolio ----------------------
   const allProducts = await db
