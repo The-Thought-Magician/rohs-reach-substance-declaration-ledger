@@ -16,8 +16,8 @@ const tones: Record<Tone, string> = {
 }
 
 // Maps common compliance status strings to a tone so pages can pass a raw status.
-export function statusTone(status?: string): Tone {
-  switch ((status ?? '').toLowerCase().replace(/[_\s]+/g, '-')) {
+export function statusTone(status?: unknown): Tone {
+  switch (String(status ?? '').toLowerCase().replace(/[_\s]+/g, '-')) {
     case 'compliant':
     case 'pass':
     case 'received':

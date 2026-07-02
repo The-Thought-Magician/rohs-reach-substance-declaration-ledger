@@ -49,7 +49,7 @@ interface TreeNode {
 }
 interface Rollup {
   product?: Product
-  verdict?: string
+  verdict?: string | { overall?: string; rohs?: string; reach?: string }
   rohs_verdict?: string
   reach_verdict?: string
   offending?: Offending | null
@@ -153,10 +153,14 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
   }
 
   const product = rollup?.product
+  const rollupVerdict = typeof rollup?.verdict === 'object' ? rollup.verdict : null
   const verdict =
-    rollup?.verdict ?? compliance?.overall_verdict ?? product?.compliance_status ?? 'unknown'
-  const rohs = rollup?.rohs_verdict ?? compliance?.rohs_verdict
-  const reach = rollup?.reach_verdict ?? compliance?.reach_verdict
+    (typeof rollup?.verdict === 'string' ? rollup.verdict : rollupVerdict?.overall) ??
+    compliance?.overall_verdict ??
+    product?.compliance_status ??
+    'unknown'
+  const rohs = rollupVerdict?.rohs ?? rollup?.rohs_verdict ?? compliance?.rohs_verdict
+  const reach = rollupVerdict?.reach ?? rollup?.reach_verdict ?? compliance?.reach_verdict
   const coverage = num(rollup?.coveragePct ?? rollup?.coverage_pct ?? compliance?.coverage_pct)
   const offending = rollup?.offending
   const tree = rollup?.tree ?? []
