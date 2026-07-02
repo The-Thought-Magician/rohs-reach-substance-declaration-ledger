@@ -188,38 +188,56 @@ router.post('/', authMiddleware, async (c) => {
   ])
   counts.restrictedSubstances = 4
 
-  // --- SVHC list version + substances ----------------------------------
-  const [svhcVersion] = await db
-    .insert(svhc_list_versions)
-    .values({
-      version_label: `ECHA Candidate List ${new Date().getFullYear()}`,
-      published_at: new Date(),
-      substance_count: 2,
-    })
-    .returning()
+  // --- SVHC list version + substances ------------------------------------
+  // svhc_list_versions.version_label is a globally-unique regulatory list
+  // (not per-workspace), so re-seeding must reuse an existing row rather
+  // than always inserting a fresh one.
+  const svhcLabel = `ECHA Candidate List ${new Date().getFullYear()}`
+  const [existingSvhcVersion] = await db
+    .select()
+    .from(svhc_list_versions)
+    .where(eq(svhc_list_versions.version_label, svhcLabel))
+  const [svhcVersion] =
+    existingSvhcVersion !== undefined
+      ? [existingSvhcVersion]
+      : await db
+          .insert(svhc_list_versions)
+          .values({
+            version_label: svhcLabel,
+            published_at: new Date(),
+            substance_count: 2,
+          })
+          .returning()
   counts.svhcVersions = 1
 
-  const [svhcDehp] = await db
-    .insert(svhc_substances)
-    .values({
+  const existingSvhcSubstances = await db
+    .select()
+    .from(svhc_substances)
+    .where(eq(svhc_substances.list_version_id, svhcVersion.id))
+  let svhcDehp = existingSvhcSubstances.find((s) => s.cas_number === '117-81-7')
+  if (existingSvhcSubstances.length === 0) {
+    ;[svhcDehp] = await db
+      .insert(svhc_substances)
+      .values({
+        list_version_id: svhcVersion.id,
+        name: 'Bis(2-ethylhexyl) phthalate (DEHP)',
+        cas_number: '117-81-7',
+        ec_number: '204-211-0',
+        date_of_inclusion: new Date('2008-10-28'),
+        reason_for_inclusion: 'Toxic for reproduction',
+        article_threshold_ppm: 1000,
+      })
+      .returning()
+    await db.insert(svhc_substances).values({
       list_version_id: svhcVersion.id,
-      name: 'Bis(2-ethylhexyl) phthalate (DEHP)',
-      cas_number: '117-81-7',
-      ec_number: '204-211-0',
-      date_of_inclusion: new Date('2008-10-28'),
+      name: 'Lead (SVHC entry)',
+      cas_number: '7439-92-1',
+      ec_number: '231-100-4',
+      date_of_inclusion: new Date('2018-06-27'),
       reason_for_inclusion: 'Toxic for reproduction',
       article_threshold_ppm: 1000,
     })
-    .returning()
-  await db.insert(svhc_substances).values({
-    list_version_id: svhcVersion.id,
-    name: 'Lead (SVHC entry)',
-    cas_number: '7439-92-1',
-    ec_number: '231-100-4',
-    date_of_inclusion: new Date('2018-06-27'),
-    reason_for_inclusion: 'Toxic for reproduction',
-    article_threshold_ppm: 1000,
-  })
+  }
   counts.svhcSubstances = 2
 
   // --- Exemptions ------------------------------------------------------
