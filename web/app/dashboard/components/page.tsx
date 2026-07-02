@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import api from '@/lib/api'
+import api, { getActiveWorkspaceId } from '@/lib/api'
 import { Button } from '@/components/ui/button'
 import { Card, CardBody } from '@/components/ui/card'
 import { Badge } from '@/components/ui/Badge'
@@ -53,6 +53,7 @@ export default function ComponentCatalogPage() {
   const [saving, setSaving] = useState(false)
   const [formError, setFormError] = useState<string | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [noWorkspace, setNoWorkspace] = useState(false)
 
   const supplierName = useMemo(() => {
     const m = new Map<string, string>()
@@ -64,12 +65,18 @@ export default function ComponentCatalogPage() {
     setLoading(true)
     setError(null)
     try {
+      const wsId = await getActiveWorkspaceId()
+      if (!wsId) {
+        setNoWorkspace(true)
+        return
+      }
       const [comps, sups] = await Promise.all([
         api.listComponents({
+          workspace_id: wsId,
           supplier_id: params?.supplier_id || undefined,
           substance_cas: params?.substance_cas || undefined,
         }),
-        api.listSuppliers(),
+        api.listSuppliers(wsId),
       ])
       setComponents(Array.isArray(comps) ? comps : [])
       setSuppliers(Array.isArray(sups) ? sups : [])
@@ -104,7 +111,10 @@ export default function ComponentCatalogPage() {
     setSaving(true)
     setFormError(null)
     try {
+      const wsId = await getActiveWorkspaceId()
+      if (!wsId) throw new Error('No workspace found')
       const body: Record<string, unknown> = {
+        workspace_id: wsId,
         name: form.name.trim(),
         manufacturer_part_number: form.manufacturer_part_number.trim() || null,
         manufacturer: form.manufacturer.trim() || null,
@@ -144,6 +154,23 @@ export default function ComponentCatalogPage() {
     () => new Set(components.map((c) => c.supplier_id).filter(Boolean)).size,
     [components],
   )
+
+  if (noWorkspace) {
+    return (
+      <div className="space-y-4">
+        <h1 className="text-2xl font-bold text-slate-100">Component Catalog</h1>
+        <EmptyState
+          title="No workspace yet"
+          description="Create a workspace in Settings before adding components."
+          action={
+            <Link href="/dashboard/settings">
+              <Button variant="secondary">Go to Settings</Button>
+            </Link>
+          }
+        />
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">

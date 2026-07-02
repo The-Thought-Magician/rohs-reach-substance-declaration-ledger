@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import api from '@/lib/api'
+import api, { getActiveWorkspaceId } from '@/lib/api'
 import { Card, CardBody, CardHeader } from '@/components/ui/card'
 import { Stat } from '@/components/ui/Stat'
 import { Badge, statusTone } from '@/components/ui/Badge'
@@ -88,12 +88,18 @@ export default function DashboardOverviewPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [noWorkspace, setNoWorkspace] = useState(false)
 
   async function load() {
     setLoading(true)
     setError(null)
     try {
-      const [ov, prods] = await Promise.all([api.getOverview(), api.listProducts()])
+      const wsId = await getActiveWorkspaceId()
+      if (!wsId) {
+        setNoWorkspace(true)
+        return
+      }
+      const [ov, prods] = await Promise.all([api.getOverview(wsId), api.listProducts({ workspace_id: wsId })])
       setOverview(ov ?? {})
       setProducts(Array.isArray(prods) ? prods : [])
     } catch (e) {
@@ -130,6 +136,23 @@ export default function DashboardOverviewPage() {
   )
 
   if (loading) return <PageSpinner label="Loading portfolio overview..." />
+
+  if (noWorkspace) {
+    return (
+      <div className="space-y-4">
+        <Header />
+        <EmptyState
+          title="No workspace yet"
+          description="Create a workspace in Settings to start tracking products, suppliers, and declarations."
+          action={
+            <Link href="/dashboard/settings">
+              <Button variant="secondary">Go to Settings</Button>
+            </Link>
+          }
+        />
+      </div>
+    )
+  }
 
   if (error) {
     return (

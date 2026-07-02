@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import api from '@/lib/api'
+import api, { getActiveWorkspaceId } from '@/lib/api'
 import { Card, CardBody, CardHeader } from '@/components/ui/card'
 import { Stat } from '@/components/ui/Stat'
 import { Badge, statusTone } from '@/components/ui/Badge'
@@ -52,12 +52,18 @@ export default function ProductsPage() {
 
   const [deleteTarget, setDeleteTarget] = useState<Product | null>(null)
   const [deleting, setDeleting] = useState(false)
+  const [noWorkspace, setNoWorkspace] = useState(false)
 
   async function load() {
     setLoading(true)
     setError(null)
     try {
-      const data = await api.listProducts()
+      const wsId = await getActiveWorkspaceId()
+      if (!wsId) {
+        setNoWorkspace(true)
+        return
+      }
+      const data = await api.listProducts({ workspace_id: wsId })
       setProducts(Array.isArray(data) ? data : [])
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to load products')
@@ -112,7 +118,10 @@ export default function ProductsPage() {
     setSaving(true)
     setFormError(null)
     try {
+      const wsId = await getActiveWorkspaceId()
+      if (!wsId) throw new Error('No workspace found')
       await api.createProduct({
+        workspace_id: wsId,
         name: form.name.trim(),
         sku: form.sku.trim() || undefined,
         part_number: form.part_number.trim() || undefined,
@@ -142,6 +151,23 @@ export default function ProductsPage() {
     } finally {
       setDeleting(false)
     }
+  }
+
+  if (noWorkspace) {
+    return (
+      <div className="space-y-4">
+        <h1 className="text-xl font-bold tracking-tight text-slate-100">Products</h1>
+        <EmptyState
+          title="No workspace yet"
+          description="Create a workspace in Settings before adding products."
+          action={
+            <Link href="/dashboard/settings">
+              <Button variant="secondary">Go to Settings</Button>
+            </Link>
+          }
+        />
+      </div>
+    )
   }
 
   return (

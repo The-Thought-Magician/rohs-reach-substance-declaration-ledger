@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import api from '@/lib/api'
+import Link from 'next/link'
+import api, { getActiveWorkspaceId } from '@/lib/api'
 import { Button } from '@/components/ui/button'
 import { Card, CardBody, CardHeader } from '@/components/ui/card'
 import { Badge, statusTone } from '@/components/ui/Badge'
@@ -99,19 +100,30 @@ export default function PacksPage() {
 
   const [exporting, setExporting] = useState(false)
   const [exportMsg, setExportMsg] = useState<string | null>(null)
+  const [noWorkspace, setNoWorkspace] = useState(false)
 
   useEffect(() => {
     let cancelled = false
     setLoadingProducts(true)
-    api
-      .listProducts()
+    getActiveWorkspaceId()
+      .then((wsId) => {
+        if (cancelled) return Promise.reject(new Error('__no_ws__'))
+        if (!wsId) {
+          setNoWorkspace(true)
+          throw new Error('__no_ws__')
+        }
+        return api.listProducts({ workspace_id: wsId })
+      })
       .then((rows: Product[]) => {
         if (cancelled) return
         const list = Array.isArray(rows) ? rows : []
         setProducts(list)
         if (list.length && !selectedId) setSelectedId(list[0].id)
       })
-      .catch((e: Error) => !cancelled && setError(e.message))
+      .catch((e: Error) => {
+        if (cancelled || e.message === '__no_ws__') return
+        setError(e.message)
+      })
       .finally(() => !cancelled && setLoadingProducts(false))
     return () => {
       cancelled = true
@@ -190,6 +202,23 @@ export default function PacksPage() {
     const covered = declarations.filter((d) => (d.status ?? '').toLowerCase() !== 'rejected').length
     return Math.min(100, Math.round((covered / bom.length) * 100))
   }, [verdict, bom, declarations])
+
+  if (noWorkspace) {
+    return (
+      <div className="space-y-4">
+        <h1 className="text-2xl font-bold text-slate-100">Declaration Packs</h1>
+        <EmptyState
+          title="No workspace yet"
+          description="Create a workspace in Settings before assembling declaration packs."
+          action={
+            <Link href="/dashboard/settings">
+              <Button variant="secondary">Go to Settings</Button>
+            </Link>
+          }
+        />
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">

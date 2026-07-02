@@ -132,7 +132,7 @@ const api = {
   // Declaration requests
   listDeclarationRequests: (params?: { workspace_id?: string; status?: string; supplier_id?: string }) =>
     get(`declaration-requests${qs(params)}`),
-  getRequestLedger: () => get('declaration-requests/ledger'),
+  getRequestLedger: (workspaceId?: string) => get(`declaration-requests/ledger${qs({ workspace_id: workspaceId })}`),
   createDeclarationRequest: (body: Json) => post('declaration-requests', body),
   bulkCreateRequests: (body: Json) => post('declaration-requests/bulk', body),
   updateDeclarationRequest: (id: string, body: Json) => put(`declaration-requests/${id}`, body),
@@ -192,6 +192,23 @@ const api = {
   getBillingPlan: () => get('billing/plan'),
   startCheckout: () => post('billing/checkout'),
   openPortal: () => post('billing/portal'),
+}
+
+// Almost every workspace-scoped endpoint requires a ?workspace_id= query param,
+// but most pages have no way to obtain one on their own. Resolve (and cache for
+// the session) the user's first workspace so every page can pass it along.
+let cachedWorkspaceId: string | null | undefined
+export async function getActiveWorkspaceId(): Promise<string | null> {
+  if (cachedWorkspaceId !== undefined) return cachedWorkspaceId
+  let resolved: string | null = null
+  try {
+    const list = await api.listWorkspaces()
+    resolved = Array.isArray(list) && list.length > 0 ? list[0].id : null
+  } catch {
+    resolved = null
+  }
+  cachedWorkspaceId = resolved
+  return resolved
 }
 
 export default api

@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import api from '@/lib/api'
+import Link from 'next/link'
+import api, { getActiveWorkspaceId } from '@/lib/api'
 import { Button } from '@/components/ui/button'
 import { Card, CardBody } from '@/components/ui/card'
 import { Badge, statusTone } from '@/components/ui/Badge'
@@ -83,12 +84,21 @@ export default function TasksPage() {
   const [detailLoading, setDetailLoading] = useState(false)
 
   const [busyId, setBusyId] = useState<string | null>(null)
+  const [noWorkspace, setNoWorkspace] = useState(false)
+  const [wsId, setWsId] = useState<string | null>(null)
 
-  function load() {
+  async function load() {
     setLoading(true)
     setError(null)
+    const id = await getActiveWorkspaceId()
+    if (!id) {
+      setNoWorkspace(true)
+      setLoading(false)
+      return
+    }
+    setWsId(id)
     api
-      .listTasks(statusFilter ? { status: statusFilter } : undefined)
+      .listTasks({ workspace_id: id, status: statusFilter || undefined })
       .then((rows: Task[]) => setTasks(Array.isArray(rows) ? rows : []))
       .catch((e: Error) => setError(e.message))
       .finally(() => setLoading(false))
@@ -156,6 +166,7 @@ export default function TasksPage() {
     setSaving(true)
     setFormError(null)
     const body: Record<string, unknown> = {
+      workspace_id: wsId,
       title: form.title.trim(),
       description: form.description.trim() || null,
       status: form.status,
@@ -218,6 +229,23 @@ export default function TasksPage() {
     } finally {
       setDetailLoading(false)
     }
+  }
+
+  if (noWorkspace) {
+    return (
+      <div className="space-y-4">
+        <h1 className="text-2xl font-bold text-slate-100">Remediation Tasks</h1>
+        <EmptyState
+          title="No workspace yet"
+          description="Create a workspace in Settings before tracking tasks."
+          action={
+            <Link href="/dashboard/settings">
+              <Button variant="secondary">Go to Settings</Button>
+            </Link>
+          }
+        />
+      </div>
+    )
   }
 
   return (

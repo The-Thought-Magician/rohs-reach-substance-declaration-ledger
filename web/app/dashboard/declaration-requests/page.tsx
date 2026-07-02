@@ -1,7 +1,8 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import api from '@/lib/api'
+import Link from 'next/link'
+import api, { getActiveWorkspaceId } from '@/lib/api'
 import { Card, CardBody, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge, statusTone } from '@/components/ui/Badge'
@@ -70,6 +71,7 @@ export default function DeclarationRequestsPage() {
   const [editing, setEditing] = useState<DeclarationRequest | null>(null)
   const [busyId, setBusyId] = useState<string | null>(null)
   const [actionError, setActionError] = useState<string | null>(null)
+  const [noWorkspace, setNoWorkspace] = useState(false)
 
   const supplierName = useCallback(
     (id?: string | null) => suppliers.find((s) => s.id === id)?.name ?? (id ? id.slice(0, 8) : 'Unassigned'),
@@ -80,10 +82,15 @@ export default function DeclarationRequestsPage() {
     setLoading(true)
     setError(null)
     try {
+      const wsId = await getActiveWorkspaceId()
+      if (!wsId) {
+        setNoWorkspace(true)
+        return
+      }
       const [reqs, sups, led] = await Promise.all([
-        api.listDeclarationRequests(),
-        api.listSuppliers(),
-        api.getRequestLedger().catch(() => ({ bySupplier: [] })),
+        api.listDeclarationRequests({ workspace_id: wsId }),
+        api.listSuppliers(wsId),
+        api.getRequestLedger(wsId).catch(() => ({ bySupplier: [] })),
       ])
       setRequests(Array.isArray(reqs) ? reqs : [])
       setSuppliers(Array.isArray(sups) ? sups : [])
@@ -162,6 +169,23 @@ export default function DeclarationRequestsPage() {
   }
 
   if (loading) return <PageSpinner label="Loading declaration requests..." />
+
+  if (noWorkspace) {
+    return (
+      <div className="space-y-4">
+        <h1 className="text-2xl font-bold text-slate-100">Declaration Requests</h1>
+        <EmptyState
+          title="No workspace yet"
+          description="Create a workspace in Settings before tracking declaration requests."
+          action={
+            <Link href="/dashboard/settings">
+              <Button variant="secondary">Go to Settings</Button>
+            </Link>
+          }
+        />
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
