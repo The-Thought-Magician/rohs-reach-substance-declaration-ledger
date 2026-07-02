@@ -31,7 +31,7 @@ export default function SignIn() {
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
           <Link href="/" className="inline-flex items-center gap-2 text-xl font-bold text-slate-100">
-            <span className="h-2.5 w-2.5 rounded-sm bg-lime-400" />
+            <span className="h-2.5 w-2.5 rounded-sm bg-yellow-400" />
             RohsReachSubstanceDeclarationLedger
           </Link>
           <h1 className="mt-4 text-2xl font-bold text-slate-100">Sign in to your account</h1>
@@ -47,7 +47,7 @@ export default function SignIn() {
               name="email"
               type="email"
               required
-              className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-slate-100 focus:border-lime-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-slate-100 focus:border-yellow-500 focus:outline-none"
               placeholder="you@example.com"
             />
           </div>
@@ -57,19 +57,19 @@ export default function SignIn() {
               name="password"
               type="password"
               required
-              className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-slate-100 focus:border-lime-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-slate-100 focus:border-yellow-500 focus:outline-none"
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-lime-500 py-3 font-semibold text-slate-950 transition-colors hover:bg-lime-400 disabled:opacity-50"
+            className="w-full rounded-lg bg-yellow-500 py-3 font-semibold text-slate-950 transition-colors hover:bg-yellow-400 disabled:opacity-50"
           >
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
           <p className="text-center text-sm text-slate-400">
             No account?{' '}
-            <Link href="/auth/sign-up" className="text-lime-400 hover:text-lime-300">
+            <Link href="/auth/sign-up" className="text-yellow-400 hover:text-yellow-300">
               Sign up
             </Link>
           </p>

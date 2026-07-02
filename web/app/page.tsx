@@ -63,7 +63,7 @@ export default function Home() {
     <main className="min-h-screen bg-slate-950 text-slate-100">
       <nav className="flex items-center justify-between border-b border-slate-800 px-6 py-4">
         <span className="flex items-center gap-2 text-base font-bold tracking-tight">
-          <span className="h-2.5 w-2.5 rounded-sm bg-lime-400" />
+          <span className="h-2.5 w-2.5 rounded-sm bg-yellow-400" />
           RohsReachSubstanceDeclarationLedger
         </span>
         <div className="flex items-center gap-2 sm:gap-4">
@@ -75,7 +75,7 @@ export default function Home() {
           </Link>
           <Link
             href="/auth/sign-up"
-            className="rounded-lg bg-lime-500 px-4 py-2 text-sm font-semibold text-slate-950 transition-colors hover:bg-lime-400"
+            className="rounded-lg bg-yellow-500 px-4 py-2 text-sm font-semibold text-slate-950 transition-colors hover:bg-yellow-400"
           >
             Get Started
           </Link>
@@ -84,24 +84,24 @@ export default function Home() {
 
       {/* Hero */}
       <section className="mx-auto max-w-5xl px-6 py-24 text-center">
-        <span className="inline-flex items-center gap-2 rounded-full border border-lime-600/40 bg-lime-500/10 px-3 py-1 text-xs font-medium text-lime-300">
+        <span className="inline-flex items-center gap-2 rounded-full border border-yellow-600/40 bg-yellow-500/10 px-3 py-1 text-xs font-medium text-yellow-300">
           RoHS · REACH · SVHC · SCIP
         </span>
-        <h1 className="mt-6 text-4xl font-black leading-tight tracking-tight sm:text-6xl">
-          Prove every product is{' '}
-          <span className="text-lime-400">substance compliant</span>, gram by gram.
+        <h1 className="mt-6 text-4xl font-bold leading-tight tracking-tight sm:text-6xl">
+          Establish a defensible record of{' '}
+          <span className="text-yellow-400">substance compliance</span>, part by part.
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-400">
-          A substances ledger that traces every restricted chemical from the legal list, through the supplier
-          declaration, to the homogeneous material, to the finished product, with a deterministic RoHS and REACH
-          pass/fail and a clear pointer to the offending part.
+          This ledger maintains the chain of evidence required for RoHS and REACH conformity: the restricted-substance
+          list, the supplier declaration, the homogeneous material, and the finished product, each tied to the next
+          and evaluated against a deterministic pass/fail rule with the offending part identified.
         </p>
         <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Link
             href="/auth/sign-up"
-            className="rounded-lg bg-lime-500 px-6 py-3 font-semibold text-slate-950 transition-colors hover:bg-lime-400"
+            className="rounded-lg bg-yellow-500 px-6 py-3 font-semibold text-slate-950 transition-colors hover:bg-yellow-400"
           >
-            Start free
+            Open a workspace
           </Link>
           <Link
             href="/auth/sign-in"
@@ -115,30 +115,36 @@ export default function Home() {
       {/* Problem */}
       <section className="border-y border-slate-800 bg-slate-900/30">
         <div className="mx-auto max-w-5xl px-6 py-16">
-          <h2 className="text-2xl font-bold tracking-tight">The compliance burden is continuous, not one-time</h2>
+          <h2 className="text-2xl font-bold tracking-tight">Compliance obligations do not close, they recur</h2>
           <p className="mt-3 max-w-3xl text-slate-400">
-            Non-compliance blocks EU and UK market access, triggers fines, and forces recalls. The SVHC candidate list
-            grows twice a year, RoHS exemptions expire on fixed dates, and deep multi-supplier BOMs need a current
-            declaration for every part. Engineers manage this with spreadsheets and email chains. There is no single
-            ledger that ties the legal substance lists to the BOM and computes a defensible pass/fail.
+            A failure to demonstrate substance compliance can block market access in the EU and UK, expose the
+            organization to penalties, and precipitate a recall. The SVHC candidate list is revised twice yearly,
+            RoHS exemptions carry fixed expiry dates, and multi-tier bills of materials require a current declaration
+            for every constituent part. Where this is tracked in spreadsheets and email correspondence, the record is
+            incomplete and difficult to defend under audit. This system is built to close that gap: one ledger that
+            ties the governing substance lists to the bill of materials and produces a pass/fail determination that
+            can be substantiated.
           </p>
           <div className="mt-8 grid gap-4 sm:grid-cols-3">
             <div className="rounded-xl border border-slate-800 bg-slate-950/50 p-5">
-              <div className="text-sm font-semibold text-lime-300">Twice-yearly SVHC growth</div>
+              <div className="text-sm font-semibold text-yellow-300">Biannual SVHC revisions</div>
               <p className="mt-1 text-sm text-slate-500">
-                A new substance instantly creates communication and SCIP obligations for affected articles.
+                Each addition to the candidate list creates an immediate obligation to notify affected articles and
+                assess SCIP exposure.
               </p>
             </div>
             <div className="rounded-xl border border-slate-800 bg-slate-950/50 p-5">
-              <div className="text-sm font-semibold text-lime-300">Expiring RoHS exemptions</div>
+              <div className="text-sm font-semibold text-yellow-300">Exemption expiry dates</div>
               <p className="mt-1 text-sm text-slate-500">
-                Exemptions must be renewed or designed out before fixed expiry dates re-flag products.
+                RoHS exemptions must be renewed or engineered out ahead of their fixed expiry, or the affected
+                products are re-flagged as non-compliant.
               </p>
             </div>
             <div className="rounded-xl border border-slate-800 bg-slate-950/50 p-5">
-              <div className="text-sm font-semibold text-lime-300">Inconsistent declarations</div>
+              <div className="text-sm font-semibold text-yellow-300">Declaration currency</div>
               <p className="mt-1 text-sm text-slate-500">
-                IPC-1752A, IEC 62474, PDFs, and spreadsheets go stale as suppliers change formulations.
+                IPC-1752A and IEC 62474 declarations, PDFs, and spreadsheets fall out of date as supplier
+                formulations change without notice.
               </p>
             </div>
           </div>
@@ -147,11 +153,11 @@ export default function Home() {
 
       {/* How it works */}
       <section className="mx-auto max-w-5xl px-6 py-16">
-        <h2 className="text-2xl font-bold tracking-tight">How it works</h2>
+        <h2 className="text-2xl font-bold tracking-tight">The compliance record, in four stages</h2>
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {steps.map((s) => (
             <div key={s.n} className="rounded-xl border border-slate-800 bg-slate-900/40 p-5">
-              <div className="text-xs font-bold text-lime-400">{s.n}</div>
+              <div className="text-xs font-bold text-yellow-400">{s.n}</div>
               <div className="mt-2 font-semibold text-slate-100">{s.title}</div>
               <p className="mt-1 text-sm text-slate-500">{s.body}</p>
             </div>
@@ -162,10 +168,10 @@ export default function Home() {
       {/* Feature grid */}
       <section className="border-t border-slate-800 bg-slate-900/30">
         <div className="mx-auto max-w-6xl px-6 py-16">
-          <h2 className="text-2xl font-bold tracking-tight">One product. The whole substance ledger.</h2>
+          <h2 className="text-2xl font-bold tracking-tight">One system of record, from BOM to SCIP filing</h2>
           <p className="mt-2 max-w-2xl text-slate-400">
-            From BOM import to SCIP readiness, every capability lives in a single auditable system with seeded sample
-            BOMs for instant demoability.
+            From BOM import through SCIP readiness, every capability required to build and defend the compliance
+            record lives in a single auditable system, with sample data seeded for immediate review.
           </p>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {features.map((f) => (
@@ -180,33 +186,33 @@ export default function Home() {
 
       {/* CTA */}
       <section className="mx-auto max-w-4xl px-6 py-20 text-center">
-        <h2 className="text-3xl font-bold tracking-tight">Stop chasing spreadsheets. Start tracing substances.</h2>
+        <h2 className="text-3xl font-bold tracking-tight">Replace the spreadsheet with a system of record</h2>
         <p className="mx-auto mt-4 max-w-xl text-slate-400">
-          Bring your first BOM, collect declarations, and compute a defensible RoHS and REACH verdict today. Every
-          feature is free.
+          Import a bill of materials, collect the outstanding declarations, and produce a defensible RoHS and REACH
+          determination today. Every capability is included at no charge.
         </p>
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Link
             href="/auth/sign-up"
-            className="rounded-lg bg-lime-500 px-6 py-3 font-semibold text-slate-950 transition-colors hover:bg-lime-400"
+            className="rounded-lg bg-yellow-500 px-6 py-3 font-semibold text-slate-950 transition-colors hover:bg-yellow-400"
           >
-            Create your account
+            Open a workspace
           </Link>
           <Link
             href="/pricing"
             className="rounded-lg border border-slate-700 bg-slate-900 px-6 py-3 font-semibold text-slate-200 transition-colors hover:bg-slate-800"
           >
-            See pricing
+            Review pricing
           </Link>
         </div>
       </section>
 
       <footer className="border-t border-slate-800 py-10 text-center text-sm text-slate-600">
         <p className="flex items-center justify-center gap-2">
-          <span className="h-2 w-2 rounded-sm bg-lime-500/70" />
+          <span className="h-2 w-2 rounded-sm bg-yellow-500/70" />
           RohsReachSubstanceDeclarationLedger
         </p>
-        <p className="mt-2">RoHS and REACH substance compliance, traced gram by gram.</p>
+        <p className="mt-2">A defensible record of RoHS and REACH substance compliance, part by part.</p>
       </footer>
     </main>
   )

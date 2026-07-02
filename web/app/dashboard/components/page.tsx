@@ -202,7 +202,7 @@ export default function ComponentCatalogPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Name, MPN, manufacturer..."
-              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-600 focus:border-lime-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-600 focus:border-yellow-500 focus:outline-none"
             />
           </div>
           <div className="w-full lg:w-56">
@@ -212,7 +212,7 @@ export default function ComponentCatalogPage() {
             <select
               value={supplierFilter}
               onChange={(e) => setSupplierFilter(e.target.value)}
-              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 focus:border-lime-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 focus:border-yellow-500 focus:outline-none"
             >
               <option value="">All suppliers</option>
               {suppliers.map((s) => (
@@ -230,7 +230,7 @@ export default function ComponentCatalogPage() {
               value={casFilter}
               onChange={(e) => setCasFilter(e.target.value)}
               placeholder="e.g. 7439-92-1"
-              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-600 focus:border-lime-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-600 focus:border-yellow-500 focus:outline-none"
             />
           </div>
           <div className="flex gap-2">
@@ -295,7 +295,7 @@ export default function ComponentCatalogPage() {
                 <TD>
                   <Link
                     href={`/dashboard/components/${c.id}`}
-                    className="font-medium text-slate-100 hover:text-lime-400"
+                    className="font-medium text-slate-100 hover:text-yellow-400"
                   >
                     {c.name}
                   </Link>
@@ -424,7 +424,7 @@ export default function ComponentCatalogPage() {
 }
 
 const inputCls =
-  'w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-600 focus:border-lime-500 focus:outline-none'
+  'w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-600 focus:border-yellow-500 focus:outline-none'
 
 function Field({
   label,
@@ -439,7 +439,7 @@ function Field({
     <label className="block">
       <span className="mb-1 block text-xs font-medium uppercase tracking-wide text-slate-500">
         {label}
-        {required && <span className="ml-0.5 text-lime-400">*</span>}
+        {required && <span className="ml-0.5 text-yellow-400">*</span>}
       </span>
       {children}
     </label>

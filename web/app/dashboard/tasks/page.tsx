@@ -273,12 +273,12 @@ export default function TasksPage() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search tasks..."
-            className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 placeholder:text-slate-600 focus:border-lime-500/60 focus:outline-none sm:max-w-xs"
+            className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 placeholder:text-slate-600 focus:border-yellow-500/60 focus:outline-none sm:max-w-xs"
           />
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 focus:border-lime-500/60 focus:outline-none"
+            className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 focus:border-yellow-500/60 focus:outline-none"
           >
             <option value="">All statuses</option>
             {COLUMNS.map((c) => (
@@ -331,7 +331,7 @@ export default function TasksPage() {
                       >
                         <button
                           onClick={() => openDetail(t)}
-                          className="block w-full text-left text-sm font-medium text-slate-200 hover:text-lime-300"
+                          className="block w-full text-left text-sm font-medium text-slate-200 hover:text-yellow-300"
                         >
                           {t.title}
                         </button>
@@ -353,7 +353,7 @@ export default function TasksPage() {
                             value={t.status}
                             disabled={busyId === t.id}
                             onChange={(e) => moveTask(t, e.target.value)}
-                            className="rounded border border-slate-700 bg-slate-950 px-1.5 py-1 text-xs text-slate-300 focus:border-lime-500/60 focus:outline-none"
+                            className="rounded border border-slate-700 bg-slate-950 px-1.5 py-1 text-xs text-slate-300 focus:border-yellow-500/60 focus:outline-none"
                           >
                             {COLUMNS.map((c) => (
                               <option key={c.key} value={c.key}>

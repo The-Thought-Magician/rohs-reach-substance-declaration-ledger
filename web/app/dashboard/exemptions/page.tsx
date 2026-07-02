@@ -309,7 +309,7 @@ export default function ExemptionsPage() {
                 onClick={() => reloadExpiring(d)}
                 className={`rounded-md border px-2 py-1 transition-colors ${
                   windowDays === d
-                    ? 'border-lime-600/50 bg-lime-500/15 text-lime-300'
+                    ? 'border-yellow-600/50 bg-yellow-500/15 text-yellow-300'
                     : 'border-slate-700 text-slate-400 hover:text-slate-200'
                 }`}
               >
@@ -328,7 +328,7 @@ export default function ExemptionsPage() {
                 const expired = (d ?? 0) < 0
                 const soon = !expired && (d ?? 9999) <= windowDays
                 const pct = Math.min(100, (Math.abs(d ?? 0) / maxRunway) * 100)
-                const barColor = expired ? 'bg-red-500/70' : soon ? 'bg-amber-400/70' : 'bg-lime-500/70'
+                const barColor = expired ? 'bg-red-500/70' : soon ? 'bg-amber-400/70' : 'bg-yellow-500/70'
                 return (
                   <div key={e.id} className="flex items-center gap-3">
                     <div className="w-40 shrink-0 truncate text-sm text-slate-300" title={e.exemption_number || e.description}>
@@ -363,7 +363,7 @@ export default function ExemptionsPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search number, substance, scope…"
-            className="w-64 rounded-lg border border-slate-700 bg-slate-950/60 px-3 py-1.5 text-sm text-slate-200 placeholder:text-slate-600 focus:border-lime-500/60 focus:outline-none"
+            className="w-64 rounded-lg border border-slate-700 bg-slate-950/60 px-3 py-1.5 text-sm text-slate-200 placeholder:text-slate-600 focus:border-yellow-500/60 focus:outline-none"
           />
         </CardHeader>
         <CardBody className="p-0">
@@ -612,7 +612,7 @@ export default function ExemptionsPage() {
 }
 
 const inputCls =
-  'w-full rounded-lg border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm text-slate-200 placeholder:text-slate-600 focus:border-lime-500/60 focus:outline-none'
+  'w-full rounded-lg border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm text-slate-200 placeholder:text-slate-600 focus:border-yellow-500/60 focus:outline-none'
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (

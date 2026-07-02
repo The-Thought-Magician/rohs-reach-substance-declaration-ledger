@@ -190,7 +190,7 @@ export default function AuditPage() {
                 </div>
                 <div className="h-3 flex-1 overflow-hidden rounded-full bg-slate-800">
                   <div
-                    className="h-full rounded-full bg-lime-500/70"
+                    className="h-full rounded-full bg-yellow-500/70"
                     style={{ width: `${(count / maxActionCount) * 100}%` }}
                   />
                 </div>
@@ -208,7 +208,7 @@ export default function AuditPage() {
             <select
               value={entityType}
               onChange={(e) => setEntityType(e.target.value)}
-              className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-200 focus:border-lime-500 focus:outline-none"
+              className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-200 focus:border-yellow-500 focus:outline-none"
             >
               <option value="">All types</option>
               {ENTITY_TYPES.map((t) => (
@@ -224,7 +224,7 @@ export default function AuditPage() {
               value={entityId}
               onChange={(e) => setEntityId(e.target.value)}
               placeholder="filter by entity id"
-              className="w-48 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-200 placeholder:text-slate-600 focus:border-lime-500 focus:outline-none"
+              className="w-48 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-200 placeholder:text-slate-600 focus:border-yellow-500 focus:outline-none"
             />
           </div>
           <div className="flex flex-col">
@@ -232,7 +232,7 @@ export default function AuditPage() {
             <select
               value={limit}
               onChange={(e) => setLimit(Number(e.target.value))}
-              className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-200 focus:border-lime-500 focus:outline-none"
+              className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-200 focus:border-yellow-500 focus:outline-none"
             >
               {[50, 100, 200, 500].map((n) => (
                 <option key={n} value={n}>
@@ -262,7 +262,7 @@ export default function AuditPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="search loaded events..."
-              className="w-56 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-200 placeholder:text-slate-600 focus:border-lime-500 focus:outline-none"
+              className="w-56 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-200 placeholder:text-slate-600 focus:border-yellow-500 focus:outline-none"
             />
           </div>
         </CardBody>
@@ -350,7 +350,7 @@ function EventDetail({ event, onClose }: { event: AuditEvent; onClose: () => voi
           </div>
           <div>
             <div className="mb-1 text-xs font-medium uppercase tracking-wide text-slate-500">Metadata</div>
-            <pre className="max-h-80 overflow-auto rounded-lg border border-slate-800 bg-slate-950 p-3 text-xs text-lime-300">
+            <pre className="max-h-80 overflow-auto rounded-lg border border-slate-800 bg-slate-950 p-3 text-xs text-yellow-300">
               {JSON.stringify(event.metadata ?? {}, null, 2)}
             </pre>
           </div>

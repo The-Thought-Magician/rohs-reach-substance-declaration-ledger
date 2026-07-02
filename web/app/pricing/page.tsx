@@ -58,7 +58,7 @@ export default function Pricing() {
     <main className="min-h-screen bg-slate-950 text-slate-100">
       <nav className="flex items-center justify-between border-b border-slate-800 px-6 py-4">
         <Link href="/" className="flex items-center gap-2 text-base font-bold tracking-tight">
-          <span className="h-2.5 w-2.5 rounded-sm bg-lime-400" />
+          <span className="h-2.5 w-2.5 rounded-sm bg-yellow-400" />
           RohsReachSubstanceDeclarationLedger
         </Link>
         <div className="flex items-center gap-4">
@@ -67,7 +67,7 @@ export default function Pricing() {
           </Link>
           <Link
             href="/auth/sign-up"
-            className="rounded-lg bg-lime-500 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-lime-400"
+            className="rounded-lg bg-yellow-500 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-yellow-400"
           >
             Get Started
           </Link>
@@ -80,9 +80,9 @@ export default function Pricing() {
           Every capability of the substance ledger is free while we are in beta. No part limits, no feature gates.
         </p>
 
-        <div className="mx-auto mt-12 max-w-md rounded-2xl border border-lime-600/40 bg-slate-900/60 p-8 text-left shadow-xl">
+        <div className="mx-auto mt-12 max-w-md rounded-2xl border border-yellow-600/40 bg-slate-900/60 p-8 text-left shadow-xl">
           <div className="flex items-center justify-between">
-            <span className="rounded-full border border-lime-600/40 bg-lime-500/10 px-3 py-1 text-xs font-semibold text-lime-300">
+            <span className="rounded-full border border-yellow-600/40 bg-yellow-500/10 px-3 py-1 text-xs font-semibold text-yellow-300">
               Free plan
             </span>
             {planName && (
@@ -100,7 +100,7 @@ export default function Pricing() {
           <ul className="mt-6 space-y-2.5">
             {included.map((item) => (
               <li key={item} className="flex items-start gap-2 text-sm text-slate-300">
-                <span className="mt-0.5 text-lime-400">✓</span>
+                <span className="mt-0.5 text-yellow-400">✓</span>
                 <span>{item}</span>
               </li>
             ))}
@@ -108,7 +108,7 @@ export default function Pricing() {
 
           <Link
             href="/auth/sign-up"
-            className="mt-8 block w-full rounded-lg bg-lime-500 py-3 text-center font-semibold text-slate-950 transition-colors hover:bg-lime-400"
+            className="mt-8 block w-full rounded-lg bg-yellow-500 py-3 text-center font-semibold text-slate-950 transition-colors hover:bg-yellow-400"
           >
             Get started free
           </Link>
@@ -128,7 +128,7 @@ export default function Pricing() {
 
         <p className="mt-10 text-sm text-slate-500">
           Already have an account?{' '}
-          <Link href="/auth/sign-in" className="text-lime-400 hover:text-lime-300">
+          <Link href="/auth/sign-in" className="text-yellow-400 hover:text-yellow-300">
             Sign in
           </Link>
         </p>

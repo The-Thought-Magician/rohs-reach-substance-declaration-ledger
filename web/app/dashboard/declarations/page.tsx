@@ -356,12 +356,12 @@ export default function DeclarationsPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search supplier, component, format…"
-            className="min-w-[220px] flex-1 rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder-slate-600 focus:border-lime-500 focus:outline-none"
+            className="min-w-[220px] flex-1 rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder-slate-600 focus:border-yellow-500 focus:outline-none"
           />
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 focus:border-lime-500 focus:outline-none"
+            className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 focus:border-yellow-500 focus:outline-none"
           >
             <option value="">All statuses</option>
             {STATUS_OPTIONS.map((s) => (
@@ -373,7 +373,7 @@ export default function DeclarationsPage() {
           <select
             value={supplierFilter}
             onChange={(e) => setSupplierFilter(e.target.value)}
-            className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 focus:border-lime-500 focus:outline-none"
+            className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 focus:border-yellow-500 focus:outline-none"
           >
             <option value="">All suppliers</option>
             {suppliers.map((s) => (
@@ -387,7 +387,7 @@ export default function DeclarationsPage() {
               type="checkbox"
               checked={staleOnly}
               onChange={(e) => setStaleOnly(e.target.checked)}
-              className="h-4 w-4 accent-lime-500"
+              className="h-4 w-4 accent-yellow-500"
             />
             Stale only
           </label>
@@ -518,7 +518,7 @@ export default function DeclarationsPage() {
               <select
                 value={intake.supplier_id}
                 onChange={(e) => setIntake({ ...intake, supplier_id: e.target.value })}
-                className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 focus:border-lime-500 focus:outline-none"
+                className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 focus:border-yellow-500 focus:outline-none"
               >
                 <option value="">Select supplier…</option>
                 {suppliers.map((s) => (
@@ -533,7 +533,7 @@ export default function DeclarationsPage() {
               <select
                 value={intake.component_id}
                 onChange={(e) => setIntake({ ...intake, component_id: e.target.value })}
-                className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 focus:border-lime-500 focus:outline-none"
+                className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 focus:border-yellow-500 focus:outline-none"
               >
                 <option value="">Select component…</option>
                 {components.map((c) => (
@@ -548,7 +548,7 @@ export default function DeclarationsPage() {
               <select
                 value={intake.format}
                 onChange={(e) => setIntake({ ...intake, format: e.target.value })}
-                className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 focus:border-lime-500 focus:outline-none"
+                className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 focus:border-yellow-500 focus:outline-none"
               >
                 {FORMAT_OPTIONS.map((f) => (
                   <option key={f} value={f}>
@@ -562,7 +562,7 @@ export default function DeclarationsPage() {
               <select
                 value={intake.status}
                 onChange={(e) => setIntake({ ...intake, status: e.target.value })}
-                className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 focus:border-lime-500 focus:outline-none"
+                className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 focus:border-yellow-500 focus:outline-none"
               >
                 {STATUS_OPTIONS.map((s) => (
                   <option key={s} value={s}>
@@ -577,7 +577,7 @@ export default function DeclarationsPage() {
                 type="date"
                 value={intake.valid_from}
                 onChange={(e) => setIntake({ ...intake, valid_from: e.target.value })}
-                className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 focus:border-lime-500 focus:outline-none"
+                className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 focus:border-yellow-500 focus:outline-none"
               />
             </div>
             <div>
@@ -586,7 +586,7 @@ export default function DeclarationsPage() {
                 type="date"
                 value={intake.valid_until}
                 onChange={(e) => setIntake({ ...intake, valid_until: e.target.value })}
-                className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 focus:border-lime-500 focus:outline-none"
+                className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 focus:border-yellow-500 focus:outline-none"
               />
             </div>
           </div>
@@ -597,7 +597,7 @@ export default function DeclarationsPage() {
                 value={intake.document_url}
                 onChange={(e) => setIntake({ ...intake, document_url: e.target.value })}
                 placeholder="https://…"
-                className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder-slate-600 focus:border-lime-500 focus:outline-none"
+                className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder-slate-600 focus:border-yellow-500 focus:outline-none"
               />
             </div>
             <div>
@@ -611,7 +611,7 @@ export default function DeclarationsPage() {
                 step="0.05"
                 value={intake.confidence}
                 onChange={(e) => setIntake({ ...intake, confidence: e.target.value })}
-                className="w-full accent-lime-500"
+                className="w-full accent-yellow-500"
               />
             </div>
           </div>
@@ -666,7 +666,7 @@ export default function DeclarationsPage() {
                       href={detail.document_url}
                       target="_blank"
                       rel="noreferrer"
-                      className="break-all text-lime-400 hover:underline"
+                      className="break-all text-yellow-400 hover:underline"
                     >
                       {detail.document_url}
                     </a>
@@ -688,7 +688,7 @@ export default function DeclarationsPage() {
                     onClick={() => changeStatus(s)}
                     className={`rounded-full border px-3 py-1 text-xs transition-colors disabled:opacity-60 ${
                       active
-                        ? 'border-lime-600/40 bg-lime-500/15 text-lime-300'
+                        ? 'border-yellow-600/40 bg-yellow-500/15 text-yellow-300'
                         : 'border-slate-700 bg-slate-800 text-slate-400 hover:text-slate-200'
                     }`}
                   >
@@ -768,19 +768,19 @@ export default function DeclarationsPage() {
                   value={subForm.material_name}
                   onChange={(e) => setSubForm({ ...subForm, material_name: e.target.value })}
                   placeholder="Material"
-                  className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder-slate-600 focus:border-lime-500 focus:outline-none"
+                  className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder-slate-600 focus:border-yellow-500 focus:outline-none"
                 />
                 <input
                   value={subForm.substance_name}
                   onChange={(e) => setSubForm({ ...subForm, substance_name: e.target.value })}
                   placeholder="Substance *"
-                  className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder-slate-600 focus:border-lime-500 focus:outline-none"
+                  className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder-slate-600 focus:border-yellow-500 focus:outline-none"
                 />
                 <input
                   value={subForm.cas_number}
                   onChange={(e) => setSubForm({ ...subForm, cas_number: e.target.value })}
                   placeholder="CAS no."
-                  className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 font-mono text-sm text-slate-100 placeholder-slate-600 focus:border-lime-500 focus:outline-none"
+                  className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 font-mono text-sm text-slate-100 placeholder-slate-600 focus:border-yellow-500 focus:outline-none"
                 />
                 <input
                   type="number"
@@ -788,7 +788,7 @@ export default function DeclarationsPage() {
                   value={subForm.concentration_ppm}
                   onChange={(e) => setSubForm({ ...subForm, concentration_ppm: e.target.value })}
                   placeholder="ppm"
-                  className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder-slate-600 focus:border-lime-500 focus:outline-none"
+                  className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder-slate-600 focus:border-yellow-500 focus:outline-none"
                 />
               </div>
               <div className="flex justify-end">

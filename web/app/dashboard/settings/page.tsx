@@ -372,7 +372,7 @@ export default function SettingsPage() {
                   </div>
                 )}
                 {wsMsg && (
-                  <div className="rounded-lg border border-lime-600/40 bg-lime-500/10 px-3 py-2 text-sm text-lime-300">
+                  <div className="rounded-lg border border-yellow-600/40 bg-yellow-500/10 px-3 py-2 text-sm text-yellow-300">
                     {wsMsg}
                   </div>
                 )}
@@ -385,7 +385,7 @@ export default function SettingsPage() {
                       value={wsForm.name}
                       onChange={(e) => setWsForm({ ...wsForm, name: e.target.value })}
                       placeholder="Compliance Workspace"
-                      className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder-slate-600 focus:border-lime-500 focus:outline-none"
+                      className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder-slate-600 focus:border-yellow-500 focus:outline-none"
                     />
                   </div>
                   <div>
@@ -396,7 +396,7 @@ export default function SettingsPage() {
                       value={wsForm.company}
                       onChange={(e) => setWsForm({ ...wsForm, company: e.target.value })}
                       placeholder="Acme Hardware Inc."
-                      className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder-slate-600 focus:border-lime-500 focus:outline-none"
+                      className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder-slate-600 focus:border-yellow-500 focus:outline-none"
                     />
                   </div>
                 </div>
@@ -415,7 +415,7 @@ export default function SettingsPage() {
                           onClick={() => toggleRegion(r)}
                           className={`rounded-full border px-3 py-1 text-xs transition-colors ${
                             active
-                              ? 'border-lime-600/40 bg-lime-500/15 text-lime-300'
+                              ? 'border-yellow-600/40 bg-yellow-500/15 text-yellow-300'
                               : 'border-slate-700 bg-slate-800 text-slate-400 hover:text-slate-200'
                           }`}
                         >
@@ -441,7 +441,7 @@ export default function SettingsPage() {
                           value={wsForm[t.key as 'rohs_ppm' | 'svhc_ppm']}
                           onChange={(e) => setWsForm({ ...wsForm, [t.key]: e.target.value })}
                           placeholder={t.placeholder}
-                          className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder-slate-600 focus:border-lime-500 focus:outline-none"
+                          className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder-slate-600 focus:border-yellow-500 focus:outline-none"
                         />
                       </div>
                     ))}
@@ -622,7 +622,7 @@ export default function SettingsPage() {
               </div>
             )}
             {seedMsg && (
-              <div className="rounded-lg border border-lime-600/40 bg-lime-500/10 px-3 py-2 text-sm text-lime-300">
+              <div className="rounded-lg border border-yellow-600/40 bg-yellow-500/10 px-3 py-2 text-sm text-yellow-300">
                 {seedMsg}
               </div>
             )}
@@ -672,7 +672,7 @@ export default function SettingsPage() {
               value={memberForm.user_id}
               onChange={(e) => setMemberForm({ ...memberForm, user_id: e.target.value })}
               placeholder="user_abc123"
-              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder-slate-600 focus:border-lime-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder-slate-600 focus:border-yellow-500 focus:outline-none"
               autoFocus
             />
             <p className="mt-1 text-xs text-slate-600">The teammate&apos;s Neon Auth user ID.</p>
@@ -682,7 +682,7 @@ export default function SettingsPage() {
             <select
               value={memberForm.role}
               onChange={(e) => setMemberForm({ ...memberForm, role: e.target.value })}
-              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 focus:border-lime-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 focus:border-yellow-500 focus:outline-none"
             >
               {ROLE_OPTIONS.map((r) => (
                 <option key={r} value={r}>

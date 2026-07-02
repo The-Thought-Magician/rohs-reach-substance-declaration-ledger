@@ -384,11 +384,11 @@ export default function BomEditorPage() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <div className="flex items-center gap-2 text-xs text-slate-500">
-            <Link href="/dashboard/products" className="hover:text-lime-400">
+            <Link href="/dashboard/products" className="hover:text-yellow-400">
               Products
             </Link>
             <span>/</span>
-            <Link href={`/dashboard/products/${productId}`} className="hover:text-lime-400">
+            <Link href={`/dashboard/products/${productId}`} className="hover:text-yellow-400">
               Product
             </Link>
             <span>/</span>
@@ -427,12 +427,12 @@ export default function BomEditorPage() {
                     onClick={() => selectVersion(v.id)}
                     className={`rounded-lg border px-3 py-1.5 text-sm transition-colors ${
                       v.id === activeVersionId
-                        ? 'border-lime-500 bg-lime-500/10 text-lime-300'
+                        ? 'border-yellow-500 bg-yellow-500/10 text-yellow-300'
                         : 'border-slate-700 bg-slate-950 text-slate-300 hover:border-slate-600'
                     }`}
                   >
                     Rev {v.revision}
-                    {v.is_active && <span className="ml-1.5 text-xs text-lime-400">●</span>}
+                    {v.is_active && <span className="ml-1.5 text-xs text-yellow-400">●</span>}
                   </button>
                 ))}
               </div>
@@ -515,7 +515,7 @@ export default function BomEditorPage() {
                                   {comp ? (
                                     <Link
                                       href={`/dashboard/components/${comp.id}`}
-                                      className="font-medium text-slate-100 hover:text-lime-400"
+                                      className="font-medium text-slate-100 hover:text-yellow-400"
                                     >
                                       {comp.name}
                                     </Link>
@@ -781,7 +781,7 @@ export default function BomEditorPage() {
                         <td className="px-3 py-1.5 text-right tabular-nums">{String(r.quantity)}</td>
                         <td className="px-3 py-1.5">
                           {r._matched ? (
-                            <span className="text-lime-400">matched</span>
+                            <span className="text-yellow-400">matched</span>
                           ) : (
                             <span className="text-amber-400">no match</span>
                           )}
@@ -811,7 +811,7 @@ export default function BomEditorPage() {
 }
 
 const inputCls =
-  'w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-600 focus:border-lime-500 focus:outline-none'
+  'w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-600 focus:border-yellow-500 focus:outline-none'
 
 function Field({
   label,
@@ -826,7 +826,7 @@ function Field({
     <label className="block">
       <span className="mb-1 block text-xs font-medium uppercase tracking-wide text-slate-500">
         {label}
-        {required && <span className="ml-0.5 text-lime-400">*</span>}
+        {required && <span className="ml-0.5 text-yellow-400">*</span>}
       </span>
       {children}
     </label>

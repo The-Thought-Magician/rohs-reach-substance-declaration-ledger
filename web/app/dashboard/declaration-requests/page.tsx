@@ -237,7 +237,7 @@ export default function DeclarationRequestsPage() {
           </div>
           <div className="h-3 w-full overflow-hidden rounded-full bg-slate-800">
             <div
-              className="h-full rounded-full bg-lime-500 transition-all"
+              className="h-full rounded-full bg-yellow-500 transition-all"
               style={{ width: `${stats.completionPct}%` }}
             />
           </div>
@@ -302,12 +302,12 @@ export default function DeclarationRequestsPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search requests..."
-          className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-2 text-sm text-slate-200 placeholder-slate-600 focus:border-lime-500/60 focus:outline-none sm:w-64"
+          className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-2 text-sm text-slate-200 placeholder-slate-600 focus:border-yellow-500/60 focus:outline-none sm:w-64"
         />
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="rounded-lg border border-slate-800 bg-slate-900 px-3 py-2 text-sm text-slate-200 focus:border-lime-500/60 focus:outline-none"
+          className="rounded-lg border border-slate-800 bg-slate-900 px-3 py-2 text-sm text-slate-200 focus:border-yellow-500/60 focus:outline-none"
         >
           <option value="">All statuses</option>
           {STATUS_OPTIONS.map((s) => (
@@ -319,7 +319,7 @@ export default function DeclarationRequestsPage() {
         <select
           value={supplierFilter}
           onChange={(e) => setSupplierFilter(e.target.value)}
-          className="rounded-lg border border-slate-800 bg-slate-900 px-3 py-2 text-sm text-slate-200 focus:border-lime-500/60 focus:outline-none"
+          className="rounded-lg border border-slate-800 bg-slate-900 px-3 py-2 text-sm text-slate-200 focus:border-yellow-500/60 focus:outline-none"
         >
           <option value="">All suppliers</option>
           {suppliers.map((s) => (
@@ -598,7 +598,7 @@ function BulkRequestModal({
       <div className="space-y-4">
         {err && <div className="rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-300">{err}</div>}
         {result !== null && (
-          <div className="rounded-lg bg-lime-500/10 px-3 py-2 text-sm text-lime-300">
+          <div className="rounded-lg bg-yellow-500/10 px-3 py-2 text-sm text-yellow-300">
             Created {result} request(s).
           </div>
         )}
@@ -698,7 +698,7 @@ function EditRequestModal({
 }
 
 const inputCls =
-  'w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-200 placeholder-slate-600 focus:border-lime-500/60 focus:outline-none'
+  'w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-200 placeholder-slate-600 focus:border-yellow-500/60 focus:outline-none'
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (

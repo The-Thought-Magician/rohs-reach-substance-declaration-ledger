@@ -173,12 +173,12 @@ export default function RestrictedSubstancesPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search by name, CAS, EC..."
-          className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-2 text-sm text-slate-200 placeholder-slate-600 focus:border-lime-500/60 focus:outline-none sm:w-72"
+          className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-2 text-sm text-slate-200 placeholder-slate-600 focus:border-yellow-500/60 focus:outline-none sm:w-72"
         />
         <select
           value={versionFilter}
           onChange={(e) => setVersionFilter(e.target.value)}
-          className="rounded-lg border border-slate-800 bg-slate-900 px-3 py-2 text-sm text-slate-200 focus:border-lime-500/60 focus:outline-none"
+          className="rounded-lg border border-slate-800 bg-slate-900 px-3 py-2 text-sm text-slate-200 focus:border-yellow-500/60 focus:outline-none"
         >
           <option value="">All list versions</option>
           {versions.map((v) => (
@@ -241,7 +241,7 @@ export default function RestrictedSubstancesPage() {
                     <TD className="font-mono text-xs text-slate-400">{r.cas_number ?? '—'}</TD>
                     <TD className="font-mono text-xs text-slate-400">{r.ec_number ?? '—'}</TD>
                     <TD className="text-right">
-                      <span className="font-semibold text-lime-300">
+                      <span className="font-semibold text-yellow-300">
                         {r.max_concentration_ppm.toLocaleString()} ppm
                       </span>
                       <div className="text-xs text-slate-500">{ppmToPct(r.max_concentration_ppm)}</div>
@@ -424,7 +424,7 @@ function SubstanceModal({
 }
 
 const inputCls =
-  'w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-200 placeholder-slate-600 focus:border-lime-500/60 focus:outline-none'
+  'w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-200 placeholder-slate-600 focus:border-yellow-500/60 focus:outline-none'
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (

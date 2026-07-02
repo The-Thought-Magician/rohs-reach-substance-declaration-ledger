@@ -253,7 +253,7 @@ export default function CompliancePage() {
                 onClick={() => setVerdictFilter(t.key)}
                 className={`rounded-md border px-3 py-1 text-xs transition-colors ${
                   verdictFilter === t.key
-                    ? 'border-lime-600/50 bg-lime-500/15 text-lime-300'
+                    ? 'border-yellow-600/50 bg-yellow-500/15 text-yellow-300'
                     : 'border-slate-700 text-slate-400 hover:text-slate-200'
                 }`}
               >
@@ -265,7 +265,7 @@ export default function CompliancePage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search product, substance…"
-            className="w-64 rounded-lg border border-slate-700 bg-slate-950/60 px-3 py-1.5 text-sm text-slate-200 placeholder:text-slate-600 focus:border-lime-500/60 focus:outline-none"
+            className="w-64 rounded-lg border border-slate-700 bg-slate-950/60 px-3 py-1.5 text-sm text-slate-200 placeholder:text-slate-600 focus:border-yellow-500/60 focus:outline-none"
           />
         </CardHeader>
         <CardBody className="p-0">
@@ -321,7 +321,7 @@ export default function CompliancePage() {
                           <div
                             className={`h-full ${
                               (r.coverage_pct ?? 0) >= 90
-                                ? 'bg-lime-500/70'
+                                ? 'bg-yellow-500/70'
                                 : (r.coverage_pct ?? 0) >= 50
                                   ? 'bg-amber-400/70'
                                   : 'bg-red-500/70'

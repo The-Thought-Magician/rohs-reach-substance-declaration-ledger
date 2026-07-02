@@ -92,7 +92,7 @@ export default function SearchPage() {
         <button
           onClick={() => setTab('global')}
           className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
-            tab === 'global' ? 'bg-lime-500 text-slate-950' : 'text-slate-400 hover:text-slate-100'
+            tab === 'global' ? 'bg-yellow-500 text-slate-950' : 'text-slate-400 hover:text-slate-100'
           }`}
         >
           Global Search
@@ -100,7 +100,7 @@ export default function SearchPage() {
         <button
           onClick={() => setTab('cas')}
           className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
-            tab === 'cas' ? 'bg-lime-500 text-slate-950' : 'text-slate-400 hover:text-slate-100'
+            tab === 'cas' ? 'bg-yellow-500 text-slate-950' : 'text-slate-400 hover:text-slate-100'
           }`}
         >
           CAS Reverse Lookup
@@ -175,7 +175,7 @@ function GlobalSearch({ workspaceId }: { workspaceId: string }) {
             value={q}
             onChange={(e) => onChange(e.target.value)}
             placeholder="Search products, components, suppliers, substances..."
-            className="w-full rounded-lg border border-slate-700 bg-slate-800 py-2.5 pl-9 pr-3 text-sm text-slate-100 placeholder:text-slate-600 focus:border-lime-500 focus:outline-none"
+            className="w-full rounded-lg border border-slate-700 bg-slate-800 py-2.5 pl-9 pr-3 text-sm text-slate-100 placeholder:text-slate-600 focus:border-yellow-500 focus:outline-none"
           />
         </div>
         <Button type="submit" disabled={loading}>
@@ -234,7 +234,7 @@ function GlobalSearch({ workspaceId }: { workspaceId: string }) {
                         )}
                       </TD>
                       <TD className="text-right">
-                        <Link href={`/dashboard/products/${p.id}`} className="text-xs text-lime-400 hover:underline">
+                        <Link href={`/dashboard/products/${p.id}`} className="text-xs text-yellow-400 hover:underline">
                           Open →
                         </Link>
                       </TD>
@@ -265,7 +265,7 @@ function GlobalSearch({ workspaceId }: { workspaceId: string }) {
                       <TD className="text-right">
                         <Link
                           href={`/dashboard/components/${c.id}`}
-                          className="text-xs text-lime-400 hover:underline"
+                          className="text-xs text-yellow-400 hover:underline"
                         >
                           Open →
                         </Link>
@@ -295,7 +295,7 @@ function GlobalSearch({ workspaceId }: { workspaceId: string }) {
                       <TD className="text-right">
                         <Link
                           href={`/dashboard/suppliers/${s.id}`}
-                          className="text-xs text-lime-400 hover:underline"
+                          className="text-xs text-yellow-400 hover:underline"
                         >
                           Open →
                         </Link>
@@ -411,7 +411,7 @@ function CasLookup({ workspaceId }: { workspaceId: string }) {
               value={cas}
               onChange={(e) => setCas(e.target.value)}
               placeholder="e.g. 7439-92-1"
-              className="w-56 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2.5 font-mono text-sm text-slate-100 placeholder:text-slate-600 focus:border-lime-500 focus:outline-none"
+              className="w-56 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2.5 font-mono text-sm text-slate-100 placeholder:text-slate-600 focus:border-yellow-500 focus:outline-none"
             />
             <Button type="submit" disabled={loading || !cas.trim()}>
               {loading ? <Spinner /> : 'Trace'}
@@ -482,7 +482,7 @@ function CasLookup({ workspaceId }: { workspaceId: string }) {
                         {h.product?.id ? (
                           <Link
                             href={`/dashboard/products/${h.product.id}`}
-                            className="font-medium text-slate-100 hover:text-lime-300"
+                            className="font-medium text-slate-100 hover:text-yellow-300"
                           >
                             {h.product.name ?? h.product.id}
                           </Link>
@@ -494,7 +494,7 @@ function CasLookup({ workspaceId }: { workspaceId: string }) {
                         {h.component?.id ? (
                           <Link
                             href={`/dashboard/components/${h.component.id}`}
-                            className="text-slate-300 hover:text-lime-300"
+                            className="text-slate-300 hover:text-yellow-300"
                           >
                             {h.component.name ?? h.component.id}
                           </Link>

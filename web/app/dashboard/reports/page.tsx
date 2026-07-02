@@ -246,7 +246,7 @@ export default function ReportsPage() {
           <select
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
-            className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-200 focus:border-lime-500 focus:outline-none"
+            className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-200 focus:border-yellow-500 focus:outline-none"
           >
             <option value="">All types</option>
             {REPORT_TYPES.map((rt) => (
@@ -287,7 +287,7 @@ export default function ReportsPage() {
                 <TD>
                   <button
                     onClick={() => openReport(r)}
-                    className="text-left font-medium text-slate-100 hover:text-lime-300"
+                    className="text-left font-medium text-slate-100 hover:text-yellow-300"
                   >
                     {r.title ?? typeLabel(r.type)}
                   </button>
@@ -396,7 +396,7 @@ function ReportPayload({ payload }: { payload?: Record<string, unknown> | null }
               <div className="text-[10px] font-medium uppercase tracking-wide text-slate-500">
                 {k.replace(/_/g, ' ')}
               </div>
-              <div className="mt-0.5 text-sm font-semibold text-lime-300">{String(v)}</div>
+              <div className="mt-0.5 text-sm font-semibold text-yellow-300">{String(v)}</div>
             </div>
           ))}
         </div>

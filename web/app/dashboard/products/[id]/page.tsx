@@ -299,7 +299,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             <h2 className="text-sm font-semibold text-slate-100">Evidence trail</h2>
             <p className="text-xs text-slate-500">Audit log of compliance events for this product</p>
           </div>
-          <Link href="/dashboard/audit" className="text-xs font-medium text-lime-400 hover:text-lime-300">
+          <Link href="/dashboard/audit" className="text-xs font-medium text-yellow-400 hover:text-yellow-300">
             Full audit log →
           </Link>
         </CardHeader>
@@ -310,7 +310,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             <ul className="divide-y divide-slate-800">
               {audit.map((ev) => (
                 <li key={ev.id} className="flex items-start gap-3 px-5 py-3">
-                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-lime-400" />
+                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-yellow-400" />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium text-slate-200">{ev.action ?? 'event'}</span>

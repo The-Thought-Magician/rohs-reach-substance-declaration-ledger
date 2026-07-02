@@ -165,7 +165,7 @@ export default function ScipPage() {
                 type="checkbox"
                 checked={onlyRequired}
                 onChange={(e) => setOnlyRequired(e.target.checked)}
-                className="accent-lime-500"
+                className="accent-yellow-500"
               />
               Required only
             </label>
@@ -175,7 +175,7 @@ export default function ScipPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search products…"
-              className="w-full rounded-lg border border-slate-700 bg-slate-950/60 px-3 py-1.5 text-sm text-slate-200 placeholder:text-slate-600 focus:border-lime-500/60 focus:outline-none"
+              className="w-full rounded-lg border border-slate-700 bg-slate-950/60 px-3 py-1.5 text-sm text-slate-200 placeholder:text-slate-600 focus:border-yellow-500/60 focus:outline-none"
             />
             {filtered.length === 0 ? (
               <EmptyState
@@ -196,7 +196,7 @@ export default function ScipPage() {
                       key={id}
                       onClick={() => openProduct(id)}
                       className={`flex w-full items-center justify-between gap-3 px-4 py-3 text-left transition-colors ${
-                        active ? 'bg-lime-500/10' : 'hover:bg-slate-900/60'
+                        active ? 'bg-yellow-500/10' : 'hover:bg-slate-900/60'
                       }`}
                     >
                       <div className="min-w-0">

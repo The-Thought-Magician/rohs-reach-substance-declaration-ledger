@@ -280,7 +280,7 @@ export default function ComponentDetailPage() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <div className="flex items-center gap-2 text-xs text-slate-500">
-            <Link href="/dashboard/components" className="hover:text-lime-400">
+            <Link href="/dashboard/components" className="hover:text-yellow-400">
               Components
             </Link>
             <span>/</span>
@@ -411,7 +411,7 @@ export default function ComponentDetailPage() {
                                   <td className="px-4 py-2">
                                     <div className="h-2 w-32 overflow-hidden rounded-full bg-slate-800">
                                       <div
-                                        className={`h-full ${over ? 'bg-red-500' : 'bg-lime-500'}`}
+                                        className={`h-full ${over ? 'bg-red-500' : 'bg-yellow-500'}`}
                                         style={{ width: `${Math.max(2, pct)}%` }}
                                       />
                                     </div>
@@ -515,7 +515,7 @@ export default function ComponentDetailPage() {
               type="checkbox"
               checked={matForm.is_homogeneous}
               onChange={(e) => setMatForm({ ...matForm, is_homogeneous: e.target.checked })}
-              className="h-4 w-4 rounded border-slate-700 bg-slate-950 text-lime-500 focus:ring-lime-500"
+              className="h-4 w-4 rounded border-slate-700 bg-slate-950 text-yellow-500 focus:ring-yellow-500"
             />
             Homogeneous material (RoHS thresholds apply at this level)
           </label>
@@ -565,7 +565,7 @@ export default function ComponentDetailPage() {
 }
 
 const inputCls =
-  'w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-600 focus:border-lime-500 focus:outline-none'
+  'w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-600 focus:border-yellow-500 focus:outline-none'
 
 function Field({
   label,
@@ -580,7 +580,7 @@ function Field({
     <label className="block">
       <span className="mb-1 block text-xs font-medium uppercase tracking-wide text-slate-500">
         {label}
-        {required && <span className="ml-0.5 text-lime-400">*</span>}
+        {required && <span className="ml-0.5 text-yellow-400">*</span>}
       </span>
       {children}
     </label>

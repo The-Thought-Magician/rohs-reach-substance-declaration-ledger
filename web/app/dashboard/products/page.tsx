@@ -198,7 +198,7 @@ export default function ProductsPage() {
                 onClick={() => setStatusFilter(s)}
                 className={`rounded-lg px-3 py-1.5 text-xs font-medium capitalize transition-colors ${
                   statusFilter === s
-                    ? 'bg-lime-500/15 text-lime-300 ring-1 ring-inset ring-lime-600/40'
+                    ? 'bg-yellow-500/15 text-yellow-300 ring-1 ring-inset ring-yellow-600/40'
                     : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'
                 }`}
               >
@@ -210,7 +210,7 @@ export default function ProductsPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by name, SKU, part #..."
-            className="w-full max-w-xs rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 text-sm text-slate-200 placeholder-slate-600 focus:border-lime-600 focus:outline-none focus:ring-1 focus:ring-lime-600"
+            className="w-full max-w-xs rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 text-sm text-slate-200 placeholder-slate-600 focus:border-yellow-600 focus:outline-none focus:ring-1 focus:ring-yellow-600"
           />
         </CardHeader>
         <CardBody className="p-0">
@@ -258,7 +258,7 @@ export default function ProductsPage() {
                 {filtered.map((p) => (
                   <TR key={p.id}>
                     <TD>
-                      <Link href={`/dashboard/products/${p.id}`} className="font-medium text-slate-100 hover:text-lime-300">
+                      <Link href={`/dashboard/products/${p.id}`} className="font-medium text-slate-100 hover:text-yellow-300">
                         {p.name}
                       </Link>
                     </TD>
@@ -381,14 +381,14 @@ export default function ProductsPage() {
 }
 
 const inputCls =
-  'w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-200 placeholder-slate-600 focus:border-lime-600 focus:outline-none focus:ring-1 focus:ring-lime-600'
+  'w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-200 placeholder-slate-600 focus:border-yellow-600 focus:outline-none focus:ring-1 focus:ring-yellow-600'
 
 function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
   return (
     <label className="block">
       <span className="mb-1 block text-xs font-medium text-slate-400">
         {label}
-        {required && <span className="text-lime-400"> *</span>}
+        {required && <span className="text-yellow-400"> *</span>}
       </span>
       {children}
     </label>

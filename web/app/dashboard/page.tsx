@@ -194,7 +194,7 @@ export default function DashboardOverviewPage() {
               <h2 className="text-sm font-semibold text-slate-100">Declaration coverage trend</h2>
               <p className="text-xs text-slate-500">Percentage of BOM mass with valid declarations over time</p>
             </div>
-            <span className="text-2xl font-bold text-lime-400">{latestCoverage.toFixed(0)}%</span>
+            <span className="text-2xl font-bold text-yellow-400">{latestCoverage.toFixed(0)}%</span>
           </CardHeader>
           <CardBody>
             {trend.length === 0 ? (
@@ -207,7 +207,7 @@ export default function DashboardOverviewPage() {
                       {t.pct.toFixed(0)}%
                     </span>
                     <div
-                      className="w-full rounded-t bg-gradient-to-t from-lime-600/40 to-lime-400 transition-all"
+                      className="w-full rounded-t bg-gradient-to-t from-yellow-600/40 to-yellow-400 transition-all"
                       style={{ height: `${Math.max(4, (t.pct / maxTrend) * 100)}%` }}
                       title={`${t.label}: ${t.pct.toFixed(1)}%`}
                     />
@@ -259,7 +259,7 @@ export default function DashboardOverviewPage() {
               <h2 className="text-sm font-semibold text-slate-100">SVHC exposure</h2>
               <p className="text-xs text-slate-500">Products affected per candidate-list substance</p>
             </div>
-            <Link href="/dashboard/svhc" className="text-xs font-medium text-lime-400 hover:text-lime-300">
+            <Link href="/dashboard/svhc" className="text-xs font-medium text-yellow-400 hover:text-yellow-300">
               SVHC watch →
             </Link>
           </CardHeader>
@@ -297,7 +297,7 @@ export default function DashboardOverviewPage() {
               <h2 className="text-sm font-semibold text-slate-100">Supplier responsiveness</h2>
               <p className="text-xs text-slate-500">Declaration return performance</p>
             </div>
-            <Link href="/dashboard/suppliers" className="text-xs font-medium text-lime-400 hover:text-lime-300">
+            <Link href="/dashboard/suppliers" className="text-xs font-medium text-yellow-400 hover:text-yellow-300">
               Suppliers →
             </Link>
           </CardHeader>
@@ -308,7 +308,7 @@ export default function DashboardOverviewPage() {
               <ul className="space-y-2.5">
                 {suppliers.slice(0, 8).map((s, i) => {
                   const score = Math.max(0, Math.min(100, num(s.responsiveness_score ?? s.responsivenessScore)))
-                  const tone = score >= 70 ? 'bg-lime-400' : score >= 40 ? 'bg-amber-400' : 'bg-red-400'
+                  const tone = score >= 70 ? 'bg-yellow-400' : score >= 40 ? 'bg-amber-400' : 'bg-red-400'
                   return (
                     <li key={i}>
                       <div className="flex items-center justify-between text-sm">
@@ -331,7 +331,7 @@ export default function DashboardOverviewPage() {
       <Card>
         <CardHeader className="flex items-center justify-between">
           <h2 className="text-sm font-semibold text-slate-100">Recent products</h2>
-          <Link href="/dashboard/products" className="text-xs font-medium text-lime-400 hover:text-lime-300">
+          <Link href="/dashboard/products" className="text-xs font-medium text-yellow-400 hover:text-yellow-300">
             All products →
           </Link>
         </CardHeader>
@@ -361,7 +361,7 @@ export default function DashboardOverviewPage() {
                 {recentProducts.map((p) => (
                   <TR key={p.id}>
                     <TD>
-                      <Link href={`/dashboard/products/${p.id}`} className="font-medium text-slate-100 hover:text-lime-300">
+                      <Link href={`/dashboard/products/${p.id}`} className="font-medium text-slate-100 hover:text-yellow-300">
                         {p.name}
                       </Link>
                       {p.part_number && <span className="ml-2 text-xs text-slate-600">{p.part_number}</span>}

@@ -168,7 +168,7 @@ export default function NotificationsPage() {
                 key={m}
                 onClick={() => setFilter(m)}
                 className={`rounded-md px-3 py-1.5 text-xs font-medium capitalize transition-colors ${
-                  filter === m ? 'bg-lime-500 text-slate-950' : 'text-slate-400 hover:text-slate-200'
+                  filter === m ? 'bg-yellow-500 text-slate-950' : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
                 {m}
@@ -178,7 +178,7 @@ export default function NotificationsPage() {
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
-            className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 focus:border-lime-500/60 focus:outline-none"
+            className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 focus:border-yellow-500/60 focus:outline-none"
           >
             <option value="">All types</option>
             {types.map((t) => (
@@ -217,7 +217,7 @@ export default function NotificationsPage() {
               className={`flex items-start gap-3 rounded-xl border px-4 py-3 transition-colors ${
                 n.is_read
                   ? 'border-slate-800 bg-slate-900/40'
-                  : 'border-lime-600/30 bg-lime-500/5'
+                  : 'border-yellow-600/30 bg-yellow-500/5'
               }`}
             >
               <div className="mt-0.5 text-xl" aria-hidden>
@@ -225,7 +225,7 @@ export default function NotificationsPage() {
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  {!n.is_read && <span className="h-2 w-2 rounded-full bg-lime-400" aria-label="Unread" />}
+                  {!n.is_read && <span className="h-2 w-2 rounded-full bg-yellow-400" aria-label="Unread" />}
                   <span className="text-sm font-semibold text-slate-100">{n.title}</span>
                   {n.type && <Badge tone={typeTone(n.type)}>{n.type}</Badge>}
                   <span className="ml-auto whitespace-nowrap text-xs text-slate-500">{timeAgo(n.created_at)}</span>
@@ -233,7 +233,7 @@ export default function NotificationsPage() {
                 {n.body && <p className="mt-1 text-sm text-slate-400">{n.body}</p>}
                 <div className="mt-2 flex flex-wrap items-center gap-3 text-xs">
                   {n.link && (
-                    <Link href={n.link} className="text-lime-400 hover:underline">
+                    <Link href={n.link} className="text-yellow-400 hover:underline">
                       View details →
                     </Link>
                   )}

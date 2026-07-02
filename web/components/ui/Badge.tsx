@@ -12,7 +12,7 @@ const tones: Record<Tone, string> = {
   warning: 'bg-amber-500/15 text-amber-300 border-amber-600/40',
   danger: 'bg-red-500/15 text-red-300 border-red-600/40',
   info: 'bg-sky-500/15 text-sky-300 border-sky-600/40',
-  lime: 'bg-lime-500/15 text-lime-300 border-lime-600/40',
+  lime: 'bg-yellow-500/15 text-yellow-300 border-yellow-600/40',
 }
 
 // Maps common compliance status strings to a tone so pages can pass a raw status.

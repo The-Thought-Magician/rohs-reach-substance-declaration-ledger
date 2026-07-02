@@ -389,7 +389,7 @@ export default function SvhcPage() {
                     <TD>
                       <Badge tone={statusTone('active')}>{versionLabel(s.list_version_id)}</Badge>
                     </TD>
-                    <TD className="text-right text-lime-300">{s.article_threshold_ppm.toLocaleString()} ppm</TD>
+                    <TD className="text-right text-yellow-300">{s.article_threshold_ppm.toLocaleString()} ppm</TD>
                     <TD>{fmtDate(s.date_of_inclusion)}</TD>
                     <TD>
                       <div className="flex justify-end">
@@ -630,7 +630,7 @@ function SubstanceModal({
 }
 
 const inputCls =
-  'w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-200 placeholder-slate-600 focus:border-lime-500/60 focus:outline-none'
+  'w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-200 placeholder-slate-600 focus:border-yellow-500/60 focus:outline-none'
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (

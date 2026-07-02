@@ -208,12 +208,12 @@ export default function SuppliersPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by name, region, notes…"
-            className="min-w-[220px] flex-1 rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder-slate-600 focus:border-lime-500 focus:outline-none"
+            className="min-w-[220px] flex-1 rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder-slate-600 focus:border-yellow-500 focus:outline-none"
           />
           <select
             value={regionFilter}
             onChange={(e) => setRegionFilter(e.target.value)}
-            className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 focus:border-lime-500 focus:outline-none"
+            className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 focus:border-yellow-500 focus:outline-none"
           >
             <option value="">All regions</option>
             {regions.map((r) => (
@@ -280,7 +280,7 @@ export default function SuppliersPage() {
                 <TD>
                   <Link
                     href={`/dashboard/suppliers/${s.id}`}
-                    className="font-medium text-slate-100 hover:text-lime-400"
+                    className="font-medium text-slate-100 hover:text-yellow-400"
                   >
                     {s.name}
                   </Link>
@@ -353,7 +353,7 @@ export default function SuppliersPage() {
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               placeholder="Acme Components GmbH"
-              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder-slate-600 focus:border-lime-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder-slate-600 focus:border-yellow-500 focus:outline-none"
               autoFocus
             />
           </div>
@@ -363,7 +363,7 @@ export default function SuppliersPage() {
               value={form.region}
               onChange={(e) => setForm({ ...form, region: e.target.value })}
               placeholder="EU, China, North America…"
-              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder-slate-600 focus:border-lime-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder-slate-600 focus:border-yellow-500 focus:outline-none"
             />
           </div>
           <div>
@@ -377,7 +377,7 @@ export default function SuppliersPage() {
               step="0.05"
               value={form.responsiveness_score}
               onChange={(e) => setForm({ ...form, responsiveness_score: e.target.value })}
-              className="w-full accent-lime-500"
+              className="w-full accent-yellow-500"
             />
           </div>
           <div>
@@ -394,7 +394,7 @@ export default function SuppliersPage() {
                     onClick={() => toggleFormat(fmt)}
                     className={`rounded-full border px-3 py-1 text-xs transition-colors ${
                       active
-                        ? 'border-lime-600/40 bg-lime-500/15 text-lime-300'
+                        ? 'border-yellow-600/40 bg-yellow-500/15 text-yellow-300'
                         : 'border-slate-700 bg-slate-800 text-slate-400 hover:text-slate-200'
                     }`}
                   >
@@ -411,7 +411,7 @@ export default function SuppliersPage() {
               onChange={(e) => setForm({ ...form, notes: e.target.value })}
               rows={3}
               placeholder="Internal notes about this supplier…"
-              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder-slate-600 focus:border-lime-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder-slate-600 focus:border-yellow-500 focus:outline-none"
             />
           </div>
         </form>

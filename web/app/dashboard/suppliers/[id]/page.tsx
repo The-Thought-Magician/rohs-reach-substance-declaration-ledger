@@ -239,7 +239,7 @@ export default function SupplierDetailPage({ params }: { params: Promise<{ id: s
   if (error || !supplier) {
     return (
       <div className="space-y-4">
-        <Link href="/dashboard/suppliers" className="text-sm text-slate-400 hover:text-lime-400">
+        <Link href="/dashboard/suppliers" className="text-sm text-slate-400 hover:text-yellow-400">
           ← Back to suppliers
         </Link>
         <Card>
@@ -258,7 +258,7 @@ export default function SupplierDetailPage({ params }: { params: Promise<{ id: s
 
   return (
     <div className="space-y-6">
-      <Link href="/dashboard/suppliers" className="text-sm text-slate-400 hover:text-lime-400">
+      <Link href="/dashboard/suppliers" className="text-sm text-slate-400 hover:text-yellow-400">
         ← Back to suppliers
       </Link>
 
@@ -363,7 +363,7 @@ export default function SupplierDetailPage({ params }: { params: Promise<{ id: s
                     <TD className="font-medium text-slate-100">{c.name}</TD>
                     <TD>
                       {c.email ? (
-                        <a href={`mailto:${c.email}`} className="text-lime-400 hover:underline">
+                        <a href={`mailto:${c.email}`} className="text-yellow-400 hover:underline">
                           {c.email}
                         </a>
                       ) : (
@@ -417,7 +417,7 @@ export default function SupplierDetailPage({ params }: { params: Promise<{ id: s
             <input
               value={edit.name}
               onChange={(e) => setEdit({ ...edit, name: e.target.value })}
-              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 focus:border-lime-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 focus:border-yellow-500 focus:outline-none"
             />
           </div>
           <div>
@@ -425,7 +425,7 @@ export default function SupplierDetailPage({ params }: { params: Promise<{ id: s
             <input
               value={edit.region}
               onChange={(e) => setEdit({ ...edit, region: e.target.value })}
-              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 focus:border-lime-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 focus:border-yellow-500 focus:outline-none"
             />
           </div>
           <div>
@@ -439,7 +439,7 @@ export default function SupplierDetailPage({ params }: { params: Promise<{ id: s
               step="0.05"
               value={edit.responsiveness_score}
               onChange={(e) => setEdit({ ...edit, responsiveness_score: e.target.value })}
-              className="w-full accent-lime-500"
+              className="w-full accent-yellow-500"
             />
           </div>
           <div>
@@ -456,7 +456,7 @@ export default function SupplierDetailPage({ params }: { params: Promise<{ id: s
                     onClick={() => toggleFormat(fmt)}
                     className={`rounded-full border px-3 py-1 text-xs transition-colors ${
                       active
-                        ? 'border-lime-600/40 bg-lime-500/15 text-lime-300'
+                        ? 'border-yellow-600/40 bg-yellow-500/15 text-yellow-300'
                         : 'border-slate-700 bg-slate-800 text-slate-400 hover:text-slate-200'
                     }`}
                   >
@@ -472,7 +472,7 @@ export default function SupplierDetailPage({ params }: { params: Promise<{ id: s
               value={edit.notes}
               onChange={(e) => setEdit({ ...edit, notes: e.target.value })}
               rows={3}
-              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 focus:border-lime-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 focus:border-yellow-500 focus:outline-none"
             />
           </div>
         </form>
@@ -505,7 +505,7 @@ export default function SupplierDetailPage({ params }: { params: Promise<{ id: s
             <input
               value={contactForm.name}
               onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
-              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 focus:border-lime-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 focus:border-yellow-500 focus:outline-none"
               autoFocus
             />
           </div>
@@ -515,7 +515,7 @@ export default function SupplierDetailPage({ params }: { params: Promise<{ id: s
               type="email"
               value={contactForm.email}
               onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
-              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 focus:border-lime-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 focus:border-yellow-500 focus:outline-none"
             />
           </div>
           <div>
@@ -524,7 +524,7 @@ export default function SupplierDetailPage({ params }: { params: Promise<{ id: s
               value={contactForm.role}
               onChange={(e) => setContactForm({ ...contactForm, role: e.target.value })}
               placeholder="Compliance manager, Sales rep…"
-              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder-slate-600 focus:border-lime-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder-slate-600 focus:border-yellow-500 focus:outline-none"
             />
           </div>
           <label className="flex items-center gap-2 text-sm text-slate-300">
@@ -532,7 +532,7 @@ export default function SupplierDetailPage({ params }: { params: Promise<{ id: s
               type="checkbox"
               checked={contactForm.is_escalation}
               onChange={(e) => setContactForm({ ...contactForm, is_escalation: e.target.checked })}
-              className="h-4 w-4 accent-lime-500"
+              className="h-4 w-4 accent-yellow-500"
             />
             Escalation contact
           </label>
