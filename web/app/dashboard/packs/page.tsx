@@ -60,7 +60,7 @@ interface PackVerdict {
 
 interface Pack {
   product?: Product
-  bom?: PackBomItem[]
+  bom?: PackBomItem[] | { version?: unknown; items?: PackBomItem[] }
   declarations?: PackDeclaration[]
   verdict?: PackVerdict | null
   exemptions?: PackExemption[]
@@ -192,7 +192,7 @@ export default function PacksPage() {
   }
 
   const verdict = pack?.verdict ?? null
-  const bom = pack?.bom ?? []
+  const bom = Array.isArray(pack?.bom) ? pack.bom : pack?.bom?.items ?? []
   const declarations = pack?.declarations ?? []
   const exemptions = pack?.exemptions ?? []
 
