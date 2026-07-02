@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import api from '@/lib/api'
+import api, { getActiveWorkspaceId } from '@/lib/api'
 import { Button } from '@/components/ui/button'
 import { Card, CardBody } from '@/components/ui/card'
 import { Stat } from '@/components/ui/Stat'
@@ -56,13 +56,19 @@ export default function SuppliersPage() {
   })
 
   const [deleting, setDeleting] = useState<string | null>(null)
+  const [noWorkspace, setNoWorkspace] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState<Supplier | null>(null)
 
   async function load() {
     setLoading(true)
     setError(null)
     try {
-      const data = await api.listSuppliers()
+      const wsId = await getActiveWorkspaceId()
+      if (!wsId) {
+        setNoWorkspace(true)
+        return
+      }
+      const data = await api.listSuppliers(wsId)
       setSuppliers(Array.isArray(data) ? data : [])
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to load suppliers')
@@ -115,13 +121,7 @@ export default function SuppliersPage() {
   }
 
   async function resolveWorkspaceId(): Promise<string | undefined> {
-    try {
-      const ws = await api.listWorkspaces()
-      if (Array.isArray(ws) && ws.length) return ws[0].id
-    } catch {
-      // ignore — backend may infer workspace from user
-    }
-    return undefined
+    return (await getActiveWorkspaceId()) ?? undefined
   }
 
   async function submitCreate(e: React.FormEvent) {
@@ -164,6 +164,23 @@ export default function SuppliersPage() {
     } finally {
       setDeleting(null)
     }
+  }
+
+  if (noWorkspace) {
+    return (
+      <div className="space-y-4">
+        <h1 className="text-2xl font-bold text-slate-100">Suppliers</h1>
+        <EmptyState
+          title="No workspace yet"
+          description="Create a workspace in Settings before adding suppliers."
+          action={
+            <Link href="/dashboard/settings">
+              <Button variant="secondary">Go to Settings</Button>
+            </Link>
+          }
+        />
+      </div>
+    )
   }
 
   return (

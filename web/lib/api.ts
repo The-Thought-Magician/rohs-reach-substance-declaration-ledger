@@ -127,7 +127,8 @@ const api = {
   deleteDeclaration: (id: string) => del(`declarations/${id}`),
   addDeclarationSubstance: (id: string, body: Json) => post(`declarations/${id}/substances`, body),
   deleteDeclarationSubstance: (substanceId: string) => del(`declarations/substances/${substanceId}`),
-  listStaleDeclarations: (days?: number) => get(`declarations/stale${qs({ days })}`),
+  listStaleDeclarations: (days?: number, workspaceId?: string) =>
+    get(`declarations/stale${qs({ days, workspace_id: workspaceId })}`),
 
   // Declaration requests
   listDeclarationRequests: (params?: { workspace_id?: string; status?: string; supplier_id?: string }) =>

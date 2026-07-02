@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import api from '@/lib/api'
+import Link from 'next/link'
+import api, { getActiveWorkspaceId } from '@/lib/api'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardBody } from '@/components/ui/card'
 import { Stat } from '@/components/ui/Stat'
@@ -103,6 +104,7 @@ export default function DeclarationsPage() {
 
   const [deleting, setDeleting] = useState<string | null>(null)
   const [confirmDelete, setConfirmDelete] = useState<Declaration | null>(null)
+  const [noWorkspace, setNoWorkspace] = useState(false)
 
   const supplierName = (idv?: string | null) => suppliers.find((s) => s.id === idv)?.name ?? '—'
   const componentName = (idv?: string | null) => {
@@ -115,11 +117,16 @@ export default function DeclarationsPage() {
     setLoading(true)
     setError(null)
     try {
+      const wsId = await getActiveWorkspaceId()
+      if (!wsId) {
+        setNoWorkspace(true)
+        return
+      }
       const [decls, sups, comps, stale] = await Promise.all([
-        api.listDeclarations(),
-        api.listSuppliers().catch(() => []),
-        api.listComponents().catch(() => []),
-        api.listStaleDeclarations().catch(() => []),
+        api.listDeclarations({ workspace_id: wsId }),
+        api.listSuppliers(wsId).catch(() => []),
+        api.listComponents({ workspace_id: wsId }).catch(() => []),
+        api.listStaleDeclarations(undefined, wsId).catch(() => []),
       ])
       setDeclarations(Array.isArray(decls) ? decls : [])
       setSuppliers(Array.isArray(sups) ? sups : [])
@@ -305,6 +312,23 @@ export default function DeclarationsPage() {
     } finally {
       setDeleting(null)
     }
+  }
+
+  if (noWorkspace) {
+    return (
+      <div className="space-y-4">
+        <h1 className="text-2xl font-bold text-slate-100">Declarations</h1>
+        <EmptyState
+          title="No workspace yet"
+          description="Create a workspace in Settings before tracking declarations."
+          action={
+            <Link href="/dashboard/settings">
+              <Button variant="secondary">Go to Settings</Button>
+            </Link>
+          }
+        />
+      </div>
+    )
   }
 
   return (
