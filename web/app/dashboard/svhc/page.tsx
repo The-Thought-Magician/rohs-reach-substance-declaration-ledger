@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import api from '@/lib/api'
+import api, { getActiveWorkspaceId } from '@/lib/api'
 import { Card, CardBody, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge, statusTone } from '@/components/ui/Badge'
@@ -73,9 +73,10 @@ export default function SvhcPage() {
     setLoading(true)
     setError(null)
     try {
+      const wsId = await getActiveWorkspaceId()
       const [vers, w] = await Promise.all([
         api.listSvhcVersions(),
-        api.svhcWatch().catch(() => ({ affected: [] })),
+        wsId ? api.svhcWatch(wsId).catch(() => ({ affected: [] })) : Promise.resolve({ affected: [] }),
       ])
       const vlist: SvhcVersion[] = Array.isArray(vers) ? vers : []
       setVersions(vlist)

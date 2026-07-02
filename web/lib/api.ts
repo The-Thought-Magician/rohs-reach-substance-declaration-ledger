@@ -106,7 +106,7 @@ const api = {
   createSvhcSubstance: (body: Json) => post('svhc/substances', body),
   deleteSvhcSubstance: (id: string) => del(`svhc/substances/${id}`),
   svhcDiff: (from: string, to: string) => get(`svhc/diff${qs({ from, to })}`),
-  svhcWatch: () => get('svhc/watch'),
+  svhcWatch: (workspaceId?: string) => get(`svhc/watch${qs({ workspace_id: workspaceId })}`),
 
   // Exemptions
   listExemptions: () => get('exemptions'),
